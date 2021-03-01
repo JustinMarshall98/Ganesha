@@ -1,4 +1,3 @@
-=======
 Ganesha
 =======
 
@@ -13,20 +12,28 @@ Hardware Requirements
    - Support for OpenGL 1.x
 
 
-
 Find out more about Ganesha, and the FFT Hacking community
 ==========================================================
 https://ffhacktics.com/smf/index.php?msg=217648
+
 https://gomtuu.org/fft/Ganesha/ (Gomtuu's original program, download for v0.60)
 
 CREDITS
 =======
-Gomtuu: Creating Ganesha and bringing it up to v0.60
+Gomtuu: Creating Ganesha and bringing it up to v0.60, creating all of the original documentation
 Twinees: Updating Ganesha to v0.72 and bringing it into TECHNICOLOR
 Jumza: Owner of the repo, updated Ganesha to v0.73
    
 Changelog
 =========
+2021-02-28 - v0.73 - Jumza Update
+ - Added the ability to select / unselect multiple polygons at once for mass editing / deleting
+ - Added hotkeys for adjusting X (+-28), Z (+-28), Y (+-12), and deleting polygons in the map viewer
+ - Added rotate vertex buttons in relation to two more planes (Just XZ in v0.70, now XZ, XY, ZY rotation possible)
+ - Added new 'settings' window with a legend for what every button does (Escape)
+ - Lighting and Palette textboxes now accept typed entries
+ - Fixed Lighting Elevation range from being bound [0,90] to [-90,90]
+
 2016-07-16 - v0.72 - Twin Update
  - Added -20 and +20 buttons for easier UV movement per request.
  - Fixed "Invisible from:" layout per request.

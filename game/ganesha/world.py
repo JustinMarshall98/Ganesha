@@ -1169,6 +1169,57 @@ class World(object):
 			polygon_id = next_polygon_id()
 			polygon.node_path.setTag('polygon_i', str(polygon_id))
 
+	def move_selected_poly(self, dim, amount, sign, selected):
+		import fft.map
+		from copy import deepcopy
+		
+		valueX = 0
+		valueY = 0
+		valueZ = 0
+		terrainvalueX = 0
+		terrainvalueZ = 0
+		
+		texture = True
+		
+		if dim == 'X':
+			valueX = sign * amount
+			terrainvalueX = sign
+		if dim == 'Y':
+			valueY = -sign * amount
+		if dim == 'Z':
+			valueZ = sign * amount
+			terrainvalueZ = sign
+			
+			
+		for polygon in selected:
+				
+			if not polygon.source.terrain_coords == (255,127,0):
+				if not polygon.source.terrain_coords is None:					
+					
+					if (terrainvalueX + polygon.source.terrain_coords[0]) < 0:
+						pass
+					elif (terrainvalueZ + polygon.source.terrain_coords[1]) < 0:
+						pass
+					else:
+						temp = list(polygon.source.terrain_coords)
+						temp[0] = terrainvalueX + polygon.source.terrain_coords[0]
+						temp[1] = terrainvalueZ + polygon.source.terrain_coords[1]
+						polygon.source.terrain_coords = tuple(temp)
+					
+			polygon.source.A.point.set_coords(polygon.source.A.point.X + valueX, polygon.source.A.point.Y + valueY, polygon.source.A.point.Z + valueZ)
+			polygon.source.B.point.set_coords(polygon.source.B.point.X + valueX, polygon.source.B.point.Y + valueY, polygon.source.B.point.Z + valueZ)
+			polygon.source.C.point.set_coords(polygon.source.C.point.X + valueX, polygon.source.C.point.Y + valueY, polygon.source.C.point.Z + valueZ)
+						
+			if hasattr(polygon.source, 'D'):
+				polygon.source.D.point.set_coords(polygon.source.D.point.X + valueX, polygon.source.D.point.Y + valueY, polygon.source.D.point.Z + valueZ)
+			
+			polygon.init_node_path()
+		
+		reset_polygon_id()
+		for polygon in self.polygons:
+			polygon_id = next_polygon_id()
+			polygon.node_path.setTag('polygon_i', str(polygon_id))
+
 	def resize_terrain(self, new_x, new_z):
 		tiles = []
 		for y in range(2):

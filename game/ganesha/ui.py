@@ -142,6 +142,7 @@ class Mouse(DirectObject):
 		self.mouseTask = taskMgr.add(self.mouse_task, 'mouseTask')
 		self.task = None
 		self.accept('mouse1', self.mouse1)
+		self.accept('control-mouse1', self.mouse1)
 		self.accept('mouse1-up', self.mouse1_up)
 		self.accept('mouse2', self.rotateCamera)
 		self.accept('mouse2-up', self.stopCamera)
@@ -298,7 +299,7 @@ class ViewerState(FSM):
 		self.app.mouse.task = self.app.mouse.hover
 
 	def filterFreeRotate(self, request, args):
-		if request == 'mouse1':
+		if request == 'mouse1' or request == 'control-mouse1':
 			self.app.select(self.app.mouse.hovered_object)
 		return None
 
@@ -454,31 +455,92 @@ class PolygonEditWindow(wx.Frame):
 		
 		#make new horizontal area for rotate buttons
 		sizer_rotate_colbuttons = wx.BoxSizer(wx.HORIZONTAL)
+
+		button_label = wx.StaticText(panel, wx.ID_ANY, "(X, Z)", size=wx.Size(30, -1))
+		sizer_rotate_colbuttons.Add(button_label)
 		
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate A 90\xb0')
 		button.SetForegroundColour('red')
-		button.Bind(wx.EVT_BUTTON, self.rotatePolygonA)
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonAOnXZ)
 		sizer_rotate_colbuttons.Add(button)
 		
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate B 90\xb0')
 		button.SetForegroundColour('green')
-		button.Bind(wx.EVT_BUTTON, self.rotatePolygonB)
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonBOnXZ)
 		sizer_rotate_colbuttons.Add(button)
 		
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate C 90\xb0')
 		button.SetForegroundColour('blue')
-		button.Bind(wx.EVT_BUTTON, self.rotatePolygonC)
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonCOnXZ)
 		sizer_rotate_colbuttons.Add(button)
 		
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate D 90\xb0')
 		button.SetForegroundColour(wx.Colour(175, 175, 0))
-		button.Bind(wx.EVT_BUTTON, self.rotatePolygonD)
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonDOnXZ)
 		sizer_rotate_colbuttons.Add(button)
 		
 		#add horizontal box to whole list
 		sizer_sections.Add(sizer_rotate_colbuttons, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
 		
 		
+		#make new horizontal area for rotate on XY buttons
+		sizer_rotate_xybuttons = wx.BoxSizer(wx.HORIZONTAL)
+
+		button_label = wx.StaticText(panel, wx.ID_ANY, "(X, Y)", size=wx.Size(30, -1))
+		sizer_rotate_xybuttons.Add(button_label)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate A 90\xb0')
+		button.SetForegroundColour('red')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonAOnXY)
+		sizer_rotate_xybuttons.Add(button)
+
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate B 90\xb0')
+		button.SetForegroundColour('green')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonBOnXY)
+		sizer_rotate_xybuttons.Add(button)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate C 90\xb0')
+		button.SetForegroundColour('blue')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonCOnXY)
+		sizer_rotate_xybuttons.Add(button)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate D 90\xb0')
+		button.SetForegroundColour(wx.Colour(175, 175, 0))
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonDOnXY)
+		sizer_rotate_xybuttons.Add(button)
+		
+		#add horizontal box to whole list
+		sizer_sections.Add(sizer_rotate_xybuttons, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+
+
+		#make new horizontal area for rotate on XY buttons
+		sizer_rotate_zybuttons = wx.BoxSizer(wx.HORIZONTAL)
+
+		button_label = wx.StaticText(panel, wx.ID_ANY, "(Z, Y)", size=wx.Size(30, -1))
+		sizer_rotate_zybuttons.Add(button_label)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate A 90\xb0')
+		button.SetForegroundColour('red')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonAOnZY)
+		sizer_rotate_zybuttons.Add(button)
+
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate B 90\xb0')
+		button.SetForegroundColour('green')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonBOnZY)
+		sizer_rotate_zybuttons.Add(button)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate C 90\xb0')
+		button.SetForegroundColour('blue')
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonCOnZY)
+		sizer_rotate_zybuttons.Add(button)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Rotate D 90\xb0')
+		button.SetForegroundColour(wx.Colour(175, 175, 0))
+		button.Bind(wx.EVT_BUTTON, self.rotatePolygonDOnZY)
+		sizer_rotate_zybuttons.Add(button)
+		
+		#add horizontal box to whole list
+		sizer_sections.Add(sizer_rotate_zybuttons, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
 		
 		
 		sizer_mid_buttons = wx.BoxSizer(wx.HORIZONTAL)
@@ -699,7 +761,7 @@ class PolygonEditWindow(wx.Frame):
 		self.to_data(None)
 		
 
-	def rotatePolygonA(self, event):
+	def rotatePolygonAOnXZ(self, event):
 	
 		vector = [0,0]
 		vector[0] = int(self.inputs[('X', 'A')].GetValue())
@@ -733,7 +795,7 @@ class PolygonEditWindow(wx.Frame):
 			count += 1
 		self.to_data(None)
 		
-	def rotatePolygonB(self, event):
+	def rotatePolygonBOnXZ(self, event):
 	
 		vector = [0,0]
 		vector[0] = int(self.inputs[('X', 'B')].GetValue())
@@ -768,7 +830,7 @@ class PolygonEditWindow(wx.Frame):
 		self.to_data(None)
 	
 	
-	def rotatePolygonC(self, event):
+	def rotatePolygonCOnXZ(self, event):
 	
 		vector = [0,0]
 		vector[0] = int(self.inputs[('X', 'C')].GetValue())
@@ -803,7 +865,7 @@ class PolygonEditWindow(wx.Frame):
 		self.to_data(None)
 
 		
-	def rotatePolygonD(self, event):
+	def rotatePolygonDOnXZ(self, event):
 	
 		vector = [0,0]
 		vector[0] = int(self.inputs[('X', 'D')].GetValue())
@@ -835,7 +897,281 @@ class PolygonEditWindow(wx.Frame):
 			self.inputs['Z', pts].SetValue(str(coordinates[count][1]))
 		
 			count += 1
-		self.to_data(None)		
+		self.to_data(None)	
+
+	def rotatePolygonAOnXY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('X', 'A')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'A')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['A', 'B', 'D', 'C']:
+			x = int(self.inputs[('X', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([x, y])
+		
+		for xNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[xNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[xNum][0]
+			coordinates[xNum][0] = coordinates[xNum][1]
+			coordinates[xNum][1] = tempvar * -1
+
+			coordinates[xNum][0] += vector[0]
+			coordinates[xNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['A', 'B', 'D', 'C']:
+			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)	
+
+	def rotatePolygonBOnXY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('X', 'B')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'B')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['B', 'D', 'C', 'A']:
+			x = int(self.inputs[('X', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([x, y])
+		
+		for xNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[xNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[xNum][0]
+			coordinates[xNum][0] = coordinates[xNum][1]
+			coordinates[xNum][1] = tempvar * -1
+
+			coordinates[xNum][0] += vector[0]
+			coordinates[xNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['B', 'D', 'C', 'A']:
+			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
+
+	def rotatePolygonCOnXY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('X', 'C')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'C')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['C', 'A', 'B', 'D']:
+			x = int(self.inputs[('X', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([x, y])
+		
+		for xNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[xNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[xNum][0]
+			coordinates[xNum][0] = coordinates[xNum][1]
+			coordinates[xNum][1] = tempvar * -1
+
+			coordinates[xNum][0] += vector[0]
+			coordinates[xNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['C', 'A', 'B', 'D']:
+			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
+
+		
+	def rotatePolygonDOnXY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('X', 'D')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['D', 'C', 'A', 'B']:
+			x = int(self.inputs[('X', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([x, y])
+		
+		for xNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[xNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[xNum][0]
+			coordinates[xNum][0] = coordinates[xNum][1]
+			coordinates[xNum][1] = tempvar * -1
+
+			coordinates[xNum][0] += vector[0]
+			coordinates[xNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['D', 'C', 'A', 'B']:
+			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
+
+	def rotatePolygonAOnZY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('Z', 'A')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'A')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['A', 'B', 'D', 'C']:
+			z = int(self.inputs[('Z', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([z, y])
+		
+		for zNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[zNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[zNum][0]
+			coordinates[zNum][0] = coordinates[zNum][1]
+			coordinates[zNum][1] = tempvar * -1
+
+			coordinates[zNum][0] += vector[0]
+			coordinates[zNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['A', 'B', 'D', 'C']:
+			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)	
+
+	def rotatePolygonBOnZY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('Z', 'B')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'B')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['B', 'D', 'C', 'A']:
+			z = int(self.inputs[('Z', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([z, y])
+		
+		for zNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[zNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[zNum][0]
+			coordinates[zNum][0] = coordinates[zNum][1]
+			coordinates[zNum][1] = tempvar * -1
+
+			coordinates[zNum][0] += vector[0]
+			coordinates[zNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['B', 'D', 'C', 'A']:
+			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
+
+	def rotatePolygonCOnZY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('Z', 'C')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'C')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['C', 'A', 'B', 'D']:
+			z = int(self.inputs[('Z', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([z, y])
+		
+		for zNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[zNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[zNum][0]
+			coordinates[zNum][0] = coordinates[zNum][1]
+			coordinates[zNum][1] = tempvar * -1
+
+			coordinates[zNum][0] += vector[0]
+			coordinates[zNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['C', 'A', 'B', 'D']:
+			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
+
+		
+	def rotatePolygonDOnZY(self, event):
+	
+		vector = [0,0]
+		vector[0] = int(self.inputs[('Z', 'D')].GetValue())
+		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+		
+		coordinates = [];
+
+		#copy to new list
+		for pts in ['D', 'C', 'A', 'B']:
+			z = int(self.inputs[('Z', pts)].GetValue())
+			y = int(self.inputs[('Y', pts)].GetValue())
+			coordinates.append([z, y])
+		
+		for zNum in range(0,4):
+			for yNum in range(0,2):
+				coordinates[zNum][yNum] -= vector[yNum]
+	
+			tempvar = coordinates[zNum][0]
+			coordinates[zNum][0] = coordinates[zNum][1]
+			coordinates[zNum][1] = tempvar * -1
+
+			coordinates[zNum][0] += vector[0]
+			coordinates[zNum][1] += vector[1]
+		
+		count = 0
+		
+		for pts in ['D', 'C', 'A', 'B']:
+			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+		
+			count += 1
+		self.to_data(None)
 
 	def from_data(self, polygon):
 		for dim in ['X', 'Y', 'Z']:
@@ -1343,7 +1679,39 @@ class UVEditWindow(DirectObject):
 			lens.setFilmSize(512)
 			self.zoom_level = 1
 
-			
+
+class SettingsWindow(wx.Frame):
+	def __init__(self, parent, ID, title):
+		self.app = parent
+		wx.Frame.__init__(self, parent.wx_win, ID, title,
+				wx.DefaultPosition, wx.DefaultSize)
+		self.Bind(wx.EVT_CLOSE, self.on_close)
+		panel = wx.Panel(self, wx.ID_ANY)
+		sizer_sections = wx.BoxSizer(wx.VERTICAL)
+		text = ("[: Previous state\t]: Next State\n\n"+
+		"n: Next map\t\tt: Next terrain mode\n\n" +
+		"s: Save\t\t\to: Output texture\n\n" +
+		"i: Import Texture\tp: Edit palette\n\n" +
+		"l: Edit lighting\t\t+: Add polygon\n\n" +
+		"d: Edit terrain dimensions\n\n" +
+		"f: Copy selected polygon (Only singularly selected Polygons)\n\n" +
+		"u: Move all polygons\n\n" +
+		"Holding CTRL: Allows selection of multiple polygons\non which you can perform the following on:\n\n" +
+		"q: Decrease Y (12)\te: Increase Y (12)\n\n" +
+		"Up: Increase X (28)\tDown: Decrease X (28)\n\n" +
+		"Left: Increase Z (28)\tRight: Decrease Z (28)\n\n" +
+		"del: Delete selected polygons (Warning: No confirmation menu given)")
+		text_label = wx.StaticText(panel, wx.ID_ANY, text)
+		textArea = wx.BoxSizer(wx.HORIZONTAL)
+		textArea.Add(text_label)
+		sizer_sections.Add(textArea, flag=wx.ALL, border=10)
+		panel.SetSizer(sizer_sections)
+		sizer_sections.SetSizeHints(panel)
+		sizer_sections.SetSizeHints(self)
+
+	def on_close(self, event):
+		self.Show(False)
+
 			
 class MoveAllPolygonsEditWindow(wx.Frame):			
 	def __init__(self, parent, ID, title):
@@ -1678,7 +2046,8 @@ class PaletteEditWindow(wx.Frame):
 			color_label = wx.StaticText(panel, wx.ID_ANY, color, size=wx.Size(20, -1))
 			color_slider = wx.Slider(panel, 5000 + i, 0, 0, max_value, size=wx.Size(124, -1))
 			color_slider.Bind(wx.EVT_SCROLL, self.on_color_slide)
-			color_input = wx.TextCtrl(panel, 6000 + i, style=wx.TE_READONLY)
+			color_input = wx.TextCtrl(panel, 6000 + i)
+			color_input.Bind(wx.EVT_TEXT_ENTER, self.on_color_enter)
 			sizer_slide_input.Add(color_label, 0)
 			sizer_slide_input.Add(color_slider, 0)
 			sizer_slide_input.Add(color_input, 0)
@@ -1722,11 +2091,47 @@ class PaletteEditWindow(wx.Frame):
 		slider = event.GetId()
 		position = event.GetPosition()
 		color = slider - 5000
+		print(color, position)
 		color_input = self.color_inputs[color]
 		color_input.SetValue(str(position))
 		color_input.Update()
 		if not self.active_button:
 			return
+		r = self.color_sliders[0].GetValue()
+		g = self.color_sliders[1].GetValue()
+		b = self.color_sliders[2].GetValue()
+		a = self.color_sliders[3].GetValue()
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
+		self.set_button_color(self.active_button, r, g, b, a)
+		factor = 255.0 / 31.0
+		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
+		self.preview.Refresh()
+
+	def on_color_enter(self, event):
+		try:
+			newInt = int(event.GetString())
+		except:
+			print("Palette Edit Warning: use a valid int between 0-31")
+			return
+		if newInt < 0:
+			newInt = 0
+		elif newInt > 31:
+			newInt = 31
+		whichSlider = event.GetId() - 6000
+		#A max = 1
+		if whichSlider == 3 and newInt > 1:
+			newInt = 1
+		position = newInt
+		#Text update in case an out of bounds number is typed
+		color_input = self.color_inputs[whichSlider]
+		color_input.SetValue(str(position))
+		color_input.Update()
+		#Update slider
+		self.color_sliders[whichSlider].SetValue(position)
+		if not self.active_button:
+			return
+		#Update colour
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
@@ -1799,9 +2204,10 @@ class LightsEditWindow(wx.Frame):
 			sizer_light.AddSpacer(1)
 			self.color_buttons[('directional', i)] = color
 			elevation_label = wx.StaticText(panel, wx.ID_ANY, 'Elevation')
-			elevation_slider = wx.Slider(panel, 7000 + i, 0, 0, 90, size=wx.Size(180, -1))
+			elevation_slider = wx.Slider(panel, 7000 + i, 0, -90, 90, size=wx.Size(180, -1))
 			elevation_slider.Bind(wx.EVT_SCROLL, self.on_elevation_slide)
 			elevation_input = wx.TextCtrl(panel, 7000 + i)
+			elevation_input.Bind(wx.EVT_TEXT_ENTER, self.on_elevation_enter)
 			sizer_light.Add(elevation_label)
 			sizer_light.Add(elevation_slider)
 			sizer_light.Add(elevation_input)
@@ -1811,6 +2217,7 @@ class LightsEditWindow(wx.Frame):
 			azimuth_slider = wx.Slider(panel, 7000 + i, 0, -180, 180, size=wx.Size(180, -1))
 			azimuth_slider.Bind(wx.EVT_SCROLL, self.on_azimuth_slide)
 			azimuth_input = wx.TextCtrl(panel, 7000 + i)
+			azimuth_input.Bind(wx.EVT_TEXT_ENTER, self.on_azimuth_enter)
 			sizer_light.Add(azimuth_label)
 			sizer_light.Add(azimuth_slider)
 			sizer_light.Add(azimuth_input)
@@ -1863,7 +2270,8 @@ class LightsEditWindow(wx.Frame):
 			color_label = wx.StaticText(panel, wx.ID_ANY, color, size=wx.Size(20, -1))
 			color_slider = wx.Slider(panel, 7000 + i, 0, 0, 255, size=wx.Size(128, -1))
 			color_slider.Bind(wx.EVT_SCROLL, self.on_color_slide)
-			color_input = wx.TextCtrl(panel, 7000 + i, style=wx.TE_READONLY)
+			color_input = wx.TextCtrl(panel, 7000 + i)
+			color_input.Bind(wx.EVT_TEXT_ENTER, self.on_color_enter)
 			sizer_slide_input.Add(color_label, 0)
 			sizer_slide_input.Add(color_slider, 0)
 			sizer_slide_input.Add(color_input, 0)
@@ -1932,6 +2340,38 @@ class LightsEditWindow(wx.Frame):
 		self.set_button_color(range_max, self.active_button, r, g, b)
 		self.to_data()
 
+	def on_color_enter(self, event):
+		if not self.active_button:
+			return
+		try:
+			position = int(event.GetString())
+		except:
+			print("Light Edit Warning: use a valid int between 0-32767")
+			return
+		if position < 0:
+			position = 0
+		elif position > 32767:
+			position = 32767
+		slider_id = event.GetId()
+		input_id = slider_id - 7000
+		color_input = self.color_inputs[input_id]
+		color_input.SetValue(str(position))
+		color_input.Update()
+		self.color_sliders[input_id].SetValue(position)
+		r = self.color_sliders[0].GetValue()
+		g = self.color_sliders[1].GetValue()
+		b = self.color_sliders[2].GetValue()
+		color_id = self.active_button.GetId() - 7000
+		range_max = 255
+		if color_id < 3:
+			range_max = 32767
+		self.colors[color_id] = (r, g, b)
+		factor = 255.0 / range_max
+		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
+		self.preview.Refresh()
+		self.set_button_color(range_max, self.active_button, r, g, b)
+		self.to_data()
+
 	def on_elevation_slide(self, event):
 		slider_id = event.GetId()
 		position = event.GetPosition()
@@ -1941,6 +2381,24 @@ class LightsEditWindow(wx.Frame):
 		elevation_input.Update()
 		self.to_data()
 
+	def on_elevation_enter(self, event):
+		slider_id = event.GetId()
+		try:
+			position = float(event.GetString())
+		except:
+			print("Light Edit Warning: use a valid float between 0-90")
+			return
+		if position < -90:
+			position = -90
+		elif position > 90:
+			position = 90
+		input_id = slider_id - 7000
+		elevation_input = self.elevation_inputs[input_id]
+		elevation_input.SetValue(str(position))
+		elevation_input.Update()
+		self.elevation_sliders[input_id].SetValue(position)
+		self.to_data()
+
 	def on_azimuth_slide(self, event):
 		slider_id = event.GetId()
 		position = event.GetPosition()
@@ -1948,6 +2406,24 @@ class LightsEditWindow(wx.Frame):
 		azimuth_input = self.azimuth_inputs[input_id]
 		azimuth_input.SetValue(str(position))
 		azimuth_input.Update()
+		self.to_data()
+
+	def on_azimuth_enter(self, event):
+		slider_id = event.GetId()
+		try:
+			position = float(event.GetString())
+		except:
+			print("Light Edit Warning: use a valid float between -180 - 180")
+			return
+		if position < -180:
+			position = -180
+		elif position > 180:
+			position = 180
+		input_id = slider_id - 7000
+		azimuth_input = self.azimuth_inputs[input_id]
+		azimuth_input.SetValue(str(position))
+		azimuth_input.Update()
+		self.azimuth_sliders[input_id].SetValue(position)
 		self.to_data()
 
 	def on_light_preview_click(self, event):
@@ -2050,16 +2526,87 @@ class Map_Viewer(DirectObject):
 		self.accept('f', self.copy_polygon)
 		self.accept('shift-=', self.add_polygon)
 		self.accept('u', self.move_all_polygons)
+
 		base.disableMouse()
 		self.state.request('Spin')
-		
+		self.selected_objects = []
+		self.multiSelect = False
+		self.accept('control', self.multi_select)
+		self.accept('control-up', self.end_multi_select)
+		self.accept('q', self.decrease_Y)
+		self.accept('e', self.increase_Y)
+		self.accept('arrow_down', self.decrease_X)
+		self.accept('arrow_up', self.increase_X)
+		self.accept('arrow_right', self.decrease_Z)
+		self.accept('arrow_left', self.increase_Z)
+		self.accept('delete', self.delete_selected)
+		self.accept('escape', self.open_settings_window)
+		#base.messenger.toggleVerbose()
 
+	# TODO: move these functions somewhere after start (organize)
+	def multi_select(self):
+		self.multiSelect = True
+	
+	def end_multi_select(self):
+		self.multiSelect = False
 		
 	def copy_polygon(self):
 		polygon = self.selected_object
 		if polygon is not None:
 			self.world.copy_polygon_to_XOffset(polygon, 0 * 28, True)
 		pass
+
+	def increase_Y(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+
+	def decrease_Y(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+
+	def increase_X(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('X', 28, 1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('X', 28, 1, [self.selected_object])
+
+	def decrease_X(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('X', 28, -1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('X', 28, -1, [self.selected_object])
+		
+	def increase_Z(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
+
+	def decrease_Z(self):
+		if not len(self.selected_objects) == 0:
+			self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
+		elif self.selected_object:
+			self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
+
+	def delete_selected(self):
+		if not len(self.selected_objects) == 0:
+			for obj in self.selected_objects:
+				self.world.delete_polygon(obj)
+				self.unselect()
+				self.polygon_edit_window.clear_inputs()
+				self.polygon_edit_window.Show(False)
+				self.uv_edit_window.close()
+		elif self.selected_object:
+			self.world.delete_polygon(self.selected_object)
+			self.unselect()
+			self.polygon_edit_window.clear_inputs()
+			self.polygon_edit_window.Show(False)
+			self.uv_edit_window.close()
+	
 		
 	def start(self, gns_path):
 		self.wx_app = wx.App(0)
@@ -2081,6 +2628,7 @@ class Map_Viewer(DirectObject):
 		self.world.read()
 		self.world.set_terrain_alpha(self.terrain_mode)
 		self.set_full_light(self.full_light_enabled)
+		self.settings_window = SettingsWindow(self, -1, 'Settings Window')
 		run()
 
 	def handle_wx_events(self, task):
@@ -2170,7 +2718,10 @@ class Map_Viewer(DirectObject):
 		
 	def move_all_polygons(self):
 		self.move_all_polygons_edit_window.Show(True)
-		#self.move_all_polygons_edit_window.MakeModal(True)		
+		#self.move_all_polygons_edit_window.MakeModal(True)	
+
+	def open_settings_window(self):
+		self.settings_window.Show(True)	
 			
 			
 	def edit_terrain_dimensions(self):
@@ -2200,8 +2751,19 @@ class Map_Viewer(DirectObject):
 	def select(self, hovered_object):
 		self.unselect()
 		if hovered_object:
-			self.selected_object = hovered_object
-			self.selected_object.select()
+			if self.multiSelect:
+				#If the object is not already selected
+				if not hovered_object in self.selected_objects:
+					self.selected_objects.append(hovered_object)
+					hovered_object.select()
+				#If the object is already selected
+				else:
+					self.selected_objects.remove(hovered_object)
+					hovered_object.unselect()
+			else:
+				self.selected_object = hovered_object
+				self.selected_object.select()
+
 			if isinstance(self.selected_object, Polygon):
 				self.terrain_edit_window.clear_inputs()
 				self.terrain_edit_window.Show(False)
@@ -2223,6 +2785,10 @@ class Map_Viewer(DirectObject):
 			self.terrain_edit_window.Show(False)
 
 	def unselect(self):
+		if not self.multiSelect:
+			for obj in self.selected_objects:
+				obj.unselect()
+			self.selected_objects = []
 		if self.selected_object:
 			self.selected_object.unselect()
 			self.selected_object = None
