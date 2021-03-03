@@ -2552,8 +2552,12 @@ class Map_Viewer(DirectObject):
 		
 	def copy_polygon(self):
 		polygon = self.selected_object
+		texture = True
+		#Check if it is textured or not
+		if(polygon.source.unknown5 is not None):
+			texture = False
 		if polygon is not None:
-			self.world.copy_polygon_to_XOffset(polygon, 0 * 28, True)
+			self.world.copy_polygon_to_XOffset(polygon, 0 * 28, texture)
 		pass
 
 	def increase_Y(self):

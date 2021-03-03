@@ -1111,7 +1111,6 @@ class World(object):
 		polygon = Polygon(self)
 		sides = 3 if isinstance(copyingPolygon.source, fft.map.Triangle) else 4
 		polygon.source = fft.map.Triangle() if sides == 3 else fft.map.Quad()
-		#
 		y = self.map.extents[0][1] - 12
 		
 		polygon.source.A = fft.map.Vertex()
@@ -1128,6 +1127,7 @@ class World(object):
 			polygon.source.D.point = fft.map.PointXYZ()
 			polygon.source.D.point.set_coords(copyingPolygon.source.D.point.X + xOffset, copyingPolygon.source.D.point.Y, copyingPolygon.source.D.point.Z)
 		if texture:
+			print("texture")
 			if not copyingPolygon.source.A.normal is None:
 				polygon.source.A.normal = fft.map.VectorXYZ()
 				polygon.source.A.normal.set_coords(copyingPolygon.source.A.normal.X, copyingPolygon.source.A.normal.Y, copyingPolygon.source.A.normal.Z)
