@@ -21,11 +21,16 @@ https://gomtuu.org/fft/Ganesha/ (Gomtuu's original program, download for v0.60)
 CREDITS
 =======
 Gomtuu: Creating Ganesha and bringing it up to v0.60, creating all of the original documentation
+
 Twinees: Updating Ganesha to v0.72 and bringing it into TECHNICOLOR
-Jumza: Owner of the repo, updated Ganesha to v0.73
+
+Jumza: Owner of the repo, updated Ganesha to v0.73 and beyond
    
 Changelog
 =========
+2021-??-?? - v0.74 - Jumza Update
+ - Fixed the Saving a [0,0] tile Map Bug and capped the max tile count at 256
+
 2021-02-28 - v0.73 - Jumza Update
  - Added the ability to select / unselect multiple polygons at once for mass editing / deleting
  - Added hotkeys for adjusting X (+-28), Z (+-28), Y (+-12), and deleting polygons in the map viewer
