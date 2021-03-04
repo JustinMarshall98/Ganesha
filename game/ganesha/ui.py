@@ -2541,6 +2541,7 @@ class Map_Viewer(DirectObject):
 		self.accept('arrow_left', self.increase_Z)
 		self.accept('delete', self.delete_selected)
 		self.accept('escape', self.open_settings_window)
+		self.accept('control-a', self.select_all)
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
@@ -2549,6 +2550,20 @@ class Map_Viewer(DirectObject):
 	
 	def end_multi_select(self):
 		self.multiSelect = False
+
+	def select_all(self):
+		print("select all!")
+		#Needs special version of unselect to avoid crashes
+		for obj in self.selected_objects:
+			obj.unselect()
+			self.selected_objects = []
+		if self.selected_object:
+			self.selected_object.unselect()
+			self.selected_object = None
+		
+		for obj in self.world.polygons:
+			obj.select()
+			self.selected_objects.append(obj)
 		
 	def copy_polygon(self):
 		polygon = self.selected_object
