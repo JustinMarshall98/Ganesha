@@ -382,23 +382,33 @@ class PolygonEditWindow(wx.Frame):
 			sizer_point_table.Add(point_label)
 		for i, data in enumerate(['X', 'Y', 'Z', 'nE', 'nA', 'U', 'V']):
 			data_label = wx.StaticText(panel, wx.ID_ANY, data, size=wx.Size(20, -1))
-			sizer_point_table.Add(data_label)
 			if data == 'X':
+				data_label.SetForegroundColour('red')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 0, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Y':
+				data_label.SetForegroundColour('green')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 2, '-12', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Z':
+				data_label.SetForegroundColour('blue')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 4, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'U':
+				data_label.SetForegroundColour('purple')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 6, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'V':
+				data_label.SetForegroundColour('orange')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 8, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			else:
+				sizer_point_table.Add(data_label)
 				button = wx.StaticText(panel, wx.ID_ANY, '')
 			sizer_point_table.Add(button)
 			for j, point in enumerate(['A', 'B', 'C', 'D']):
