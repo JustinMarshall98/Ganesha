@@ -1998,8 +1998,23 @@ class TerrainEditWindow(wx.Frame):
 		tiles.append(self.app.world.terrain.tiles[1][z][x])
 		for i, tile in enumerate(tiles):
 			tile.height = int(self.inputs[(i, 'height')].GetValue())
+			if(tile.height < 0):
+				tile.height = 0
+			#Info from Xifanie, max height is 63.5?
+			elif(tile.height > 63):
+				tile.height = 63
 			tile.depth = int(self.inputs[(i, 'depth')].GetValue())
+			if(tile.depth < 0):
+				tile.depth = 0
+			#Current max depth game allows is unknown, but ubyte max is 255
+			elif(tile.depth > 255):
+				tile.depth = 255
 			tile.slope_height = int(self.inputs[(i, 'slope_height')].GetValue())
+			if(tile.slope_height < 0):
+				tile.slope_height = 0
+			#Current max slope game allows is unknown, but ubyte max is 255
+			elif(tile.slope_height > 255):
+				tile.slope_height = 255
 			tile.slope_type = slope_types[self.inputs[(i, 'slope_type')].GetCurrentSelection()][0]
 			tile.surface_type = self.inputs[(i, 'surface_type')].GetCurrentSelection()
 			tile.cant_walk = 1 if self.inputs[(i, 'cant_walk')].GetValue() else 0
@@ -2557,55 +2572,67 @@ class Map_Viewer(DirectObject):
 		pass
 
 	def increase_Y(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+		else: #It is a tile
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
 
 	def decrease_Y(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
 
 	def increase_X(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('X', 28, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('X', 28, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('X', 28, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('X', 28, 1, [self.selected_object])
 
 	def decrease_X(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('X', 28, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('X', 28, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('X', 28, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('X', 28, -1, [self.selected_object])
 		
 	def increase_Z(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
 
 	def decrease_Z(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
 
 	def delete_selected(self):
-		if not len(self.selected_objects) == 0:
-			for obj in self.selected_objects:
-				self.world.delete_polygon(obj)
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				for obj in self.selected_objects:
+					self.world.delete_polygon(obj)
+					self.unselect()
+					self.polygon_edit_window.clear_inputs()
+					self.polygon_edit_window.Show(False)
+					self.uv_edit_window.close()
+			elif self.selected_object:
+				self.world.delete_polygon(self.selected_object)
 				self.unselect()
 				self.polygon_edit_window.clear_inputs()
 				self.polygon_edit_window.Show(False)
 				self.uv_edit_window.close()
-		elif self.selected_object:
-			self.world.delete_polygon(self.selected_object)
-			self.unselect()
-			self.polygon_edit_window.clear_inputs()
-			self.polygon_edit_window.Show(False)
-			self.uv_edit_window.close()
 	
 		
 	def start(self, gns_path):
@@ -2754,8 +2781,13 @@ class Map_Viewer(DirectObject):
 			if self.multiSelect:
 				#If the object is not already selected
 				if not hovered_object in self.selected_objects:
-					self.selected_objects.append(hovered_object)
-					hovered_object.select()
+					#If the list is empty, or if the types in the list match the type selected (so we don't mix Tile / Poly)
+					if len(self.selected_objects) == 0 or type(self.selected_objects[0]) == type(hovered_object):
+						self.selected_objects.append(hovered_object)
+						hovered_object.select()
+					#If the user tries to multi-select polygons and tiles together, don't
+					else:
+						pass
 				#If the object is already selected
 				else:
 					self.selected_objects.remove(hovered_object)
