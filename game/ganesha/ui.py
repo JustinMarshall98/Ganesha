@@ -2033,6 +2033,127 @@ class TerrainEditWindow(wx.Frame):
 			if tile.is_selected:
 				tile.select()
 
+class MultiTerrainEditWindow(wx.Frame):
+	def __init__(self, parent, ID, title):
+		self.app = parent
+		wx.Frame.__init__(self, parent.wx_win, ID, title,
+				wx.DefaultPosition, wx.DefaultSize)
+		self.Bind(wx.EVT_CLOSE, self.on_close)
+		panel = wx.Panel(self, wx.ID_ANY)
+		sizer_sections = wx.BoxSizer(wx.VERTICAL)
+		sizer_main_table = wx.FlexGridSizer(rows=8, cols=2)
+		self.inputs = {}
+		# Heading
+		label = wx.StaticText(panel, wx.ID_ANY, '')
+		sizer_main_table.Add(label)
+		label = wx.StaticText(panel, wx.ID_ANY, 'Tile')
+		sizer_main_table.Add(label)
+		# Height
+		label = wx.StaticText(panel, wx.ID_ANY, 'Height')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 1)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'height')] = data_input
+		# Depth
+		label = wx.StaticText(panel, wx.ID_ANY, 'Depth')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 3)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'depth')] = data_input
+		# Slope
+		label = wx.StaticText(panel, wx.ID_ANY, 'Slope')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 5)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'slope_height')] = data_input
+		# Slope Type
+		label = wx.StaticText(panel, wx.ID_ANY, 'Slope Type')
+		sizer_main_table.Add(label)
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 7, choices=slope_type_names)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'slope_type')] = data_input
+		# Surface
+		label = wx.StaticText(panel, wx.ID_ANY, 'Surface')
+		sizer_main_table.Add(label)
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=surface_types.values())
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'surface_type')] = data_input
+		# Impassable
+		label = wx.StaticText(panel, wx.ID_ANY, 'Impassable')
+		sizer_main_table.Add(label)
+		data_input = wx.CheckBox(panel, TERRAIN_INPUT_ID + 11)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'cant_walk')] = data_input
+		# Unselectable
+		label = wx.StaticText(panel, wx.ID_ANY, 'Unselectable')
+		sizer_main_table.Add(label)
+		data_input = wx.CheckBox(panel, TERRAIN_INPUT_ID + 13)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'cant_cursor')] = data_input
+		sizer_sections.Add(sizer_main_table, flag=wx.ALL, border=10)
+		# Buttons
+		apply_button = wx.Button(panel, wx.ID_APPLY)
+		apply_button.Bind(wx.EVT_BUTTON, self.to_data)
+		sizer_sections.Add(apply_button, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+		panel.SetSizer(sizer_sections)
+		sizer_sections.SetSizeHints(panel)
+		sizer_sections.SetSizeHints(self)
+
+	def on_close(self, event):
+		self.Show(False)
+
+	def clear_inputs(self):
+		#print 'clearing'
+		pass
+
+	def to_data(self, foo):
+		for tile in self.app.selected_objects:
+			if self.inputs[(0, 'height')].GetValue():
+				print("height", self.inputs[(0, 'height')].GetValue())
+				tile.height = int(self.inputs[(0, 'height')].GetValue())
+				if(tile.height < 0):
+					tile.height = 0
+					print("Terrain Warning: Height can't be less than 0.")
+				#Info from Xifanie, max height is 63.5?
+				elif(tile.height > 63):
+					tile.height = 63
+					print("Terrain Warning: Height can't be greater than 63.")
+			if self.inputs[(0, 'depth')].GetValue():
+				print("depth", self.inputs[(0, 'depth')].GetValue())
+				tile.depth = int(self.inputs[(0, 'depth')].GetValue())
+				if(tile.depth < 0):
+					tile.depth = 0
+					print("Terrain Warning: Depth can't be less than 0.")
+				#Current max depth game allows is unknown, but ubyte max is 255
+				elif(tile.depth > 255):
+					tile.depth = 255
+					print("Terrain Warning: Depth can't be greater than 255.")
+			if self.inputs[(0, 'slope_height')].GetValue():
+				print("slope_height", self.inputs[(0, 'slope_height')].GetValue())
+				tile.slope_height = int(self.inputs[(0, 'slope_height')].GetValue())
+				if(tile.slope_height < 0):
+					tile.slope_height = 0
+					print("Terrain Warning: Depth can't be less than 0.")
+				#Current max slope_height game allows is unknown, but ubyte max is 255
+				elif(tile.slope_height > 255):
+					tile.slope_height = 255
+					print("Terrain Warning: Depth can't be greater than 255.")
+			if self.inputs[(0, 'slope_type')].GetCurrentSelection():
+				tile.slope_type = slope_types[self.inputs[(0, 'slope_type')].GetCurrentSelection()][0]
+			if self.inputs[(0, 'surface_type')].GetCurrentSelection():
+				tile.surface_type = self.inputs[(0, 'surface_type')].GetCurrentSelection()
+
+			tile.cant_walk = 1 if self.inputs[(0, 'cant_walk')].GetValue() else 0
+			tile.cant_cursor = 1 if self.inputs[(0, 'cant_cursor')].GetValue() else 0
+				
+			tag = tile.node_path.getTag('tile_xyz')
+			tile.init_node_path()
+			tile.node_path.setTag('tile_xyz', tag)
+			if tile.is_selected:
+				tile.select()
+
+
+
 
 class PaletteEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
@@ -2563,6 +2684,7 @@ class Map_Viewer(DirectObject):
 		self.accept('arrow_left', self.increase_Z)
 		self.accept('delete', self.delete_selected)
 		self.accept('escape', self.open_settings_window)
+		self.accept('tab', self.open_multi_terrain_editor)
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
@@ -2657,6 +2779,7 @@ class Map_Viewer(DirectObject):
 		self.uv_edit_window = UVEditWindow(self)
 		self.accept('uv_edit_window_closed', self.uv_edit_window.on_close)
 		self.terrain_edit_window = TerrainEditWindow(self, -1, 'Edit Terrain')
+		self.multi_terrain_edit_window = MultiTerrainEditWindow(self, -1, 'Edit Multiple Terrains')
 		self.terrain_dimensions_edit_window = TerrainDimensionsEditWindow(self, -1, 'Edit Terrain Dimensions')
 		self.move_all_polygons_edit_window = MoveAllPolygonsEditWindow(self, -1, 'Move All Polygons')
 		self.palette_edit_window = PaletteEditWindow(self, -1, 'Edit Palettes')
@@ -2761,6 +2884,11 @@ class Map_Viewer(DirectObject):
 
 	def open_settings_window(self):
 		self.settings_window.Show(True)	
+
+	def open_multi_terrain_editor(self):
+		self.multi_terrain_edit_window.clear_inputs()
+		self.multi_terrain_edit_window.Show(True)
+		self.multi_terrain_edit_window.Raise()
 			
 			
 	def edit_terrain_dimensions(self):
@@ -2827,6 +2955,8 @@ class Map_Viewer(DirectObject):
 			self.uv_edit_window.close()
 			self.terrain_edit_window.clear_inputs()
 			self.terrain_edit_window.Show(False)
+			self.multi_terrain_edit_window.clear_inputs()
+			self.multi_terrain_edit_window.Show(False)
 
 	def unselect(self):
 		if not self.multiSelect:

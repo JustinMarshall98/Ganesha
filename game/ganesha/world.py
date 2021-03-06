@@ -1174,9 +1174,14 @@ class World(object):
 			if (tile.height + amount) < 0 or (tile.height + amount) > 63:
 				continue
 			tile.height += amount
+			tag = tile.node_path.getTag('tile_xyz')
 			tile.init_node_path()
+			tile.node_path.setTag('tile_xyz', tag)
 			if tile.is_selected:
 				tile.select()
+			#tile.init_node_path()
+			#if tile.is_selected:
+			#	tile.select()
 
 	def move_selected_poly(self, dim, amount, sign, selected):
 		import fft.map
