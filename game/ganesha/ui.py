@@ -2000,21 +2000,28 @@ class TerrainEditWindow(wx.Frame):
 			tile.height = int(self.inputs[(i, 'height')].GetValue())
 			if(tile.height < 0):
 				tile.height = 0
+				print("Terrain Warning: Height can't be less than 0.")
+
 			#Info from Xifanie, max height is 63.5?
 			elif(tile.height > 63):
 				tile.height = 63
+				print("Terrain Warning: Height can't be greater than 63.")
 			tile.depth = int(self.inputs[(i, 'depth')].GetValue())
 			if(tile.depth < 0):
 				tile.depth = 0
+				print("Terrain Warning: Depth can't be less than 0.")
 			#Current max depth game allows is unknown, but ubyte max is 255
 			elif(tile.depth > 255):
 				tile.depth = 255
+				print("Terrain Warning: Depth can't be greater than 255.")
 			tile.slope_height = int(self.inputs[(i, 'slope_height')].GetValue())
 			if(tile.slope_height < 0):
 				tile.slope_height = 0
+				print("Terrain Warning: Slope Height can't be less than 0.")
 			#Current max slope game allows is unknown, but ubyte max is 255
 			elif(tile.slope_height > 255):
 				tile.slope_height = 255
+				print("Terrain Warning: Slope Height can't be greater than 255.")
 			tile.slope_type = slope_types[self.inputs[(i, 'slope_type')].GetCurrentSelection()][0]
 			tile.surface_type = self.inputs[(i, 'surface_type')].GetCurrentSelection()
 			tile.cant_walk = 1 if self.inputs[(i, 'cant_walk')].GetValue() else 0
@@ -2579,9 +2586,9 @@ class Map_Viewer(DirectObject):
 				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
 		else: #It is a tile
 			if not len(self.selected_objects) == 0:
-				self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
+				self.world.move_selected_tile(1, self.selected_objects)
 			elif self.selected_object:
-				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+				self.world.move_selected_tile(1, [self.selected_object])
 
 	def decrease_Y(self):
 		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
@@ -2589,6 +2596,11 @@ class Map_Viewer(DirectObject):
 				self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
 			elif self.selected_object:
 				self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+		else: #It is a tile
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_tile(-1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_tile(-1, [self.selected_object])
 
 	def increase_X(self):
 		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
