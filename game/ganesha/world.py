@@ -805,6 +805,9 @@ class World(object):
 		self.gray_palettes = None
 		self.polygon_anim = None
 		self.animated_polygons = None
+		self.center_x = 0
+		self.center_y = 0
+		self.center_z = 0
 		self.init_camera()
 
 	def read(self):
@@ -827,6 +830,7 @@ class World(object):
 		self.full_light = Ambient_Light(self)
 		self.full_light.color = (255, 255, 255)
 		self.full_light.init_node_path()
+		self.set_center()
 
 	def write(self):
 		self.put_texture()
@@ -848,25 +852,69 @@ class World(object):
 		lens.setFar(131072)
 		base.cam.node().setLens(lens)
 
+	def set_center(self):
+		size_x = abs(self.map.extents[1][0] - self.map.extents[0][0])
+		size_y = abs(self.map.extents[1][1] - self.map.extents[0][1])
+		size_z = abs(self.map.extents[1][2] - self.map.extents[0][2])
+		self.center_x = size_x / 2.0
+		self.center_y = size_y / 3.0
+		self.center_z = size_z / 2.0
+		(self.center_x, self.center_y, self.center_z) = coords_to_panda(self.center_x, -self.center_y, self.center_z)
+
 	def set_camera_zoom(self):
 		base.cam.node().getLens().setFilmSize(self.map.hypotenuse)
 
 	def set_camera_angle(self, azimuth, elevation):
 		from math import sin, cos, pi
-		size_x = abs(self.map.extents[1][0] - self.map.extents[0][0])
-		size_y = abs(self.map.extents[1][1] - self.map.extents[0][1])
-		size_z = abs(self.map.extents[1][2] - self.map.extents[0][2])
-		center_x = size_x / 2.0
-		center_y = size_y / 3.0
-		center_z = size_z / 2.0
-		(center_x, center_y, center_z) = coords_to_panda(center_x, -center_y, center_z)
+		
 		y = cos(pi * elevation / 180) * self.map.hypotenuse
 		z = sin(pi * elevation / 180) * self.map.hypotenuse
 		x = cos(pi * azimuth / 180) * y
 		y = sin(pi * azimuth / 180) * y
-		base.camera.setPos(center_x + x, center_y + y, center_z + z)
+		print(self.center_x, self.center_y, self.center_z, base.camera.getPos())
+		print(x, y, z)
+		print(base.camera.getH(), base.camera.getP())
+		base.camera.setPos(self.center_x + x, self.center_y + y, self.center_z + z)
 		from pandac.PandaModules import Point3, Vec3
-		base.camera.lookAt(Point3(center_x, center_y, center_z))
+		base.camera.lookAt(Point3(self.center_x, self.center_y, self.center_z))
+
+	def set_camera_pos(self, deltaX, deltaY):
+		#from math import sin, cos, pi
+		#azimuth = base.camera.getH()
+		#elevation = base.camera.getP()
+		#y = cos(pi * elevation / 180) * self.map.hypotenuse
+		#z = sin(pi * elevation / 180) * self.map.hypotenuse
+		#x = cos(pi * azimuth / 180) * y
+		#y = sin(pi * azimuth / 180) * y
+
+		#y = cos(azimuth)
+		#x = 1-y
+		#x = x * (deltaX * 100)
+		#y = y * (deltaX * 100)
+		#z = 0 #test
+		#z = z * deltaY * 10
+
+		#self.center_x -= y
+		#self.center_y += x
+		#self.center_z += z
+		#base.camera.setPos(self.center_x, self.center_y, self.center_z)
+		xz = base.camera.getNetTransform().getMat().getRow3(0)
+		xz.setY(0)
+		xz.normalize()
+		print(xz)
+		xy = base.camera.getNetTransform().getMat().getRow3(1)
+		xy.setZ(0)
+		xy.normalize()
+
+		base.camera.setPos(base.camera.getPos() + (xz * 10 * deltaX))
+
+		#print(x, y, z)
+		#self.center_x -= y
+		#self.center_y += x
+		#self.center_z += z
+		#base.camera.setPos(self.center_x, self.center_y, self.center_z)
+		#from pandac.PandaModules import Point3, Vec3
+		#base.camera.lookAt(Point3(self.center_x, self.center_y, self.center_z))
 
 	def spin_camera(self, task):
 		azimuth = task.time * 30
