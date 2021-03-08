@@ -3174,6 +3174,7 @@ class Map_Viewer(DirectObject):
 		self.accept('delete', self.delete_selected)
 		self.accept('escape', self.open_settings_window)
 		self.accept('control-a', self.select_all)
+		self.select_all_mode = 0
 		self.accept('tab', self.open_multi_terrain_editor)
 		#base.messenger.toggleVerbose()
 
@@ -3185,7 +3186,6 @@ class Map_Viewer(DirectObject):
 		self.multiSelect = False
 
 	def select_all(self):
-		print("select all!")
 		#Needs special version of unselect to avoid crashes
 		for obj in self.selected_objects:
 			obj.unselect()
@@ -3194,9 +3194,26 @@ class Map_Viewer(DirectObject):
 			self.selected_object.unselect()
 			self.selected_object = None
 		
-		for obj in self.world.polygons:
-			obj.select()
-			self.selected_objects.append(obj)
+		if self.terrain_mode == MOSTLY_TERRAIN or self.terrain_mode == TERRAIN_ONLY:
+			if self.select_all_mode == 2:
+				self.select_all_mode = 0
+			else:
+				self.select_all_mode += 1
+			if self.select_all_mode == 2:
+				for i in range(len(self.world.terrain.tiles)):
+					for j in range(len(self.world.terrain.tiles[i])):
+						for p in range(len(self.world.terrain.tiles[i][j])):
+							self.world.terrain.tiles[i][j][p].select()
+							self.selected_objects.append(self.world.terrain.tiles[i][j][p])
+			else:
+				for j in range(len(self.world.terrain.tiles[self.select_all_mode])):
+					for p in range(len(self.world.terrain.tiles[self.select_all_mode][j])):
+						self.world.terrain.tiles[self.select_all_mode][j][p].select()
+						self.selected_objects.append(self.world.terrain.tiles[self.select_all_mode][j][p])
+		else:
+			for obj in self.world.polygons:
+				obj.select()
+				self.selected_objects.append(obj)
 		
 	def copy_polygon(self):
 		if not len(self.selected_objects) == 0:
