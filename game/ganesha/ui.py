@@ -1604,7 +1604,14 @@ class PolygonEditWindow(wx.Frame):
 				texcoord = getattr(self.app.selected_object.source, pt).texcoord
 				if not hasattr(texcoord, dim):
 					continue
-				setattr(texcoord, dim, int(self.inputs[(dim, pt)].GetValue()))
+				newVal = int(self.inputs[(dim, pt)].GetValue())
+				if newVal < 0:
+					newVal = 0
+					print("UV Warning: UV values cannot be below 0 (ubyte)")
+				elif newVal > 255:
+					newVal = 255
+					print("UV Warning: UV values cannot be above 255 (ubyte)")
+				setattr(texcoord, dim, newVal)
 				setattr(texcoord, 'coords', (texcoord.U, texcoord.V))
 		if self.app.selected_object.source.texture_page is not None:
 			self.app.selected_object.source.texture_page = int(self.inputs['page'].GetValue())
