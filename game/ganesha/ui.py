@@ -367,9 +367,9 @@ class PolygonEditWindow(wx.Frame):
 		panel = wx.Panel(self, wx.ID_ANY)
 		sizer_sections = wx.BoxSizer(wx.VERTICAL)
 		# Vertex point, normal, and UV coordinates
-		sizer_point_table = wx.FlexGridSizer(rows=13, cols=7)
+		sizer_point_table = wx.FlexGridSizer(rows=13, cols=9)
 		self.inputs = {}
-		for i, point in enumerate(['', '', 'A', 'B', 'C', 'D', '']):
+		for i, point in enumerate(['', '', '', 'A', 'B', 'C', 'D', '', '']):
 			point_label = wx.StaticText(panel, wx.ID_ANY, point, size=wx.Size(20, -1))
 			if point == 'A':
 				point_label.SetForegroundColour('red')
@@ -390,18 +390,28 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 0, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, POLYGON_MOVE_ID + 0, '-1', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_move_small)
 			elif data == 'Y':
 				data_label.SetForegroundColour('green')
 				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 2, '-12', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, POLYGON_MOVE_ID + 2, '-1', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_move_small)
 			elif data == 'Z':
 				data_label.SetForegroundColour('blue')
 				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 4, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, POLYGON_MOVE_ID + 4, '-1', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_move_small)
 			elif data == 'copyVector':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
@@ -417,9 +427,11 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'pasteVector':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
@@ -435,9 +447,11 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'copyLighting':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
@@ -453,9 +467,11 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'pasteLighting':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
@@ -471,9 +487,11 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'copyUV':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
@@ -489,9 +507,11 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_copy_UV_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'pasteUV':
 				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
 				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
@@ -507,19 +527,28 @@ class PolygonEditWindow(wx.Frame):
 				sizer_point_table.Add(button)
 				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_paste_UV_all)
-				#sizer_point_table.Add(button)
+				sizer_point_table.Add(button)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
 			elif data == 'U':
 				data_label.SetForegroundColour('purple')
 				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 6, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, POLYGON_MOVE_ID + 6, '-1', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_move_small)
 			elif data == 'V':
 				data_label.SetForegroundColour('orange')
 				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 8, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, POLYGON_MOVE_ID + 8, '-1', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_move_small)
 			else:
 				sizer_point_table.Add(data_label)
+				button = wx.StaticText(panel, wx.ID_ANY, '')
+				sizer_point_table.Add(button)
 				button = wx.StaticText(panel, wx.ID_ANY, '')
 			sizer_point_table.Add(button)
 			if data != 'copyVector' and data != 'pasteVector' and data != 'copyLighting' and data != 'pasteLighting' and data != 'copyUV' and data != 'pasteUV':
@@ -529,21 +558,38 @@ class PolygonEditWindow(wx.Frame):
 					sizer_point_table.Add(data_input)
 					self.inputs[(data, point)] = data_input
 				if data == 'X':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+1', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move_small)
+					sizer_point_table.Add(button)
 					button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+28', size=wx.Size(50, -1))
 					button.Bind(wx.EVT_BUTTON, self.on_move)
 				elif data == 'Y':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+1', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move_small)
+					sizer_point_table.Add(button)
 					button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+12', size=wx.Size(50, -1))
 					button.Bind(wx.EVT_BUTTON, self.on_move)
 				elif data == 'Z':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+1', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move_small)
+					sizer_point_table.Add(button)
 					button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+28', size=wx.Size(50, -1))
 					button.Bind(wx.EVT_BUTTON, self.on_move)
 				elif data == 'U':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+1', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move_small)
+					sizer_point_table.Add(button)
 					button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+20', size=wx.Size(50, -1))
 					button.Bind(wx.EVT_BUTTON, self.on_move)
 				elif data == 'V':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+1', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move_small)
+					sizer_point_table.Add(button)
 					button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+20', size=wx.Size(50, -1))
 					button.Bind(wx.EVT_BUTTON, self.on_move)
 				else:
+					button = wx.StaticText(panel, wx.ID_ANY, '')
+					sizer_point_table.Add(button)
 					button = wx.StaticText(panel, wx.ID_ANY, '')
 				sizer_point_table.Add(button)
 		sizer_sections.Add(sizer_point_table, flag=wx.ALL, border=10)
@@ -972,6 +1018,38 @@ class PolygonEditWindow(wx.Frame):
 		elif button_id in [8, 9]:
 			dim = 'V'
 			amount = 20
+		if button_id % 2 == 0:
+			sign = -1
+		else:
+			sign = 1
+		inputs = [
+			self.inputs[(dim, 'A')],
+			self.inputs[(dim, 'B')],
+			self.inputs[(dim, 'C')],
+			self.inputs[(dim, 'D')],
+		]
+		for input_ in inputs:
+			if input_.IsEnabled():
+				input_.SetValue(str(int(input_.GetValue()) + sign * amount))
+		self.to_data(None)
+
+	def on_move_small(self, event):
+		button_id = event.GetId() - POLYGON_MOVE_ID
+		if button_id in [0, 1]:
+			dim = 'X'
+			amount = 1
+		elif button_id in [2, 3]:
+			dim = 'Y'
+			amount = 1
+		elif button_id in [4, 5]:
+			dim = 'Z'
+			amount = 1
+		elif button_id in [6, 7]:
+			dim = 'U'
+			amount = 1
+		elif button_id in [8, 9]:
+			dim = 'V'
+			amount = 1
 		if button_id % 2 == 0:
 			sign = -1
 		else:
@@ -2438,7 +2516,6 @@ class MultiTerrainEditWindow(wx.Frame):
 	def to_data(self, foo):
 		for tile in self.app.selected_objects:
 			if self.inputs[(0, 'height')].GetValue():
-				print("height", self.inputs[(0, 'height')].GetValue())
 				tile.height = int(self.inputs[(0, 'height')].GetValue())
 				if(tile.height < 0):
 					tile.height = 0
@@ -2448,7 +2525,6 @@ class MultiTerrainEditWindow(wx.Frame):
 					tile.height = 63
 					print("Terrain Warning: Height can't be greater than 63.")
 			if self.inputs[(0, 'depth')].GetValue():
-				print("depth", self.inputs[(0, 'depth')].GetValue())
 				tile.depth = int(self.inputs[(0, 'depth')].GetValue())
 				if(tile.depth < 0):
 					tile.depth = 0
@@ -2458,7 +2534,6 @@ class MultiTerrainEditWindow(wx.Frame):
 					tile.depth = 255
 					print("Terrain Warning: Depth can't be greater than 255.")
 			if self.inputs[(0, 'slope_height')].GetValue():
-				print("slope_height", self.inputs[(0, 'slope_height')].GetValue())
 				tile.slope_height = int(self.inputs[(0, 'slope_height')].GetValue())
 				if(tile.slope_height < 0):
 					tile.slope_height = 0
