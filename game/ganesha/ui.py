@@ -367,7 +367,7 @@ class PolygonEditWindow(wx.Frame):
 		panel = wx.Panel(self, wx.ID_ANY)
 		sizer_sections = wx.BoxSizer(wx.VERTICAL)
 		# Vertex point, normal, and UV coordinates
-		sizer_point_table = wx.FlexGridSizer(rows=9, cols=7)
+		sizer_point_table = wx.FlexGridSizer(rows=13, cols=7)
 		self.inputs = {}
 		for i, point in enumerate(['', '', 'A', 'B', 'C', 'D', '']):
 			point_label = wx.StaticText(panel, wx.ID_ANY, point, size=wx.Size(20, -1))
@@ -380,50 +380,172 @@ class PolygonEditWindow(wx.Frame):
 			elif point == 'D':
 				point_label.SetForegroundColour(wx.Colour(175, 175, 0))
 			sizer_point_table.Add(point_label)
-		for i, data in enumerate(['X', 'Y', 'Z', 'nE', 'nA', 'U', 'V']):
-			data_label = wx.StaticText(panel, wx.ID_ANY, data, size=wx.Size(20, -1))
-			sizer_point_table.Add(data_label)
+		for i, data in enumerate(['X', 'Y', 'Z', 'copyVector', 'pasteVector', 'nE', 'nA', 'copyLighting', 'pasteLighting', 'U', 'V', 'copyUV', 'pasteUV']):
+			if data == 'copyVector' or data == 'pasteVector' or data == 'copyLighting' or data == 'pasteLighting' or data == 'copyUV' or data == 'pasteUV':
+				data_label = wx.StaticText(panel, wx.ID_ANY, "", size=wx.Size(20, -1))
+			else:
+				data_label = wx.StaticText(panel, wx.ID_ANY, data, size=wx.Size(20, -1))
 			if data == 'X':
+				data_label.SetForegroundColour('red')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 0, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Y':
+				data_label.SetForegroundColour('green')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 2, '-12', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Z':
+				data_label.SetForegroundColour('blue')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 4, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+			elif data == 'copyVector':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteVector':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex_all)
+				#sizer_point_table.Add(button)
+			elif data == 'copyLighting':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteLighting':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting_all)
+				#sizer_point_table.Add(button)
+			elif data == 'copyUV':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteUV':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV_all)
+				#sizer_point_table.Add(button)
 			elif data == 'U':
+				data_label.SetForegroundColour('purple')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 6, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'V':
+				data_label.SetForegroundColour('orange')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 8, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			else:
+				sizer_point_table.Add(data_label)
 				button = wx.StaticText(panel, wx.ID_ANY, '')
 			sizer_point_table.Add(button)
-			for j, point in enumerate(['A', 'B', 'C', 'D']):
-				input_id = POLYGON_INPUT_ID + i * 4 + j
-				data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
-				sizer_point_table.Add(data_input)
-				self.inputs[(data, point)] = data_input
-			if data == 'X':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+28', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'Y':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+12', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'Z':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+28', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'U':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+20', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'V':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+20', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			else:
-				button = wx.StaticText(panel, wx.ID_ANY, '')
-			sizer_point_table.Add(button)
+			if data != 'copyVector' and data != 'pasteVector' and data != 'copyLighting' and data != 'pasteLighting' and data != 'copyUV' and data != 'pasteUV':
+				for j, point in enumerate(['A', 'B', 'C', 'D']):
+					input_id = POLYGON_INPUT_ID + i * 4 + j
+					data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
+					sizer_point_table.Add(data_input)
+					self.inputs[(data, point)] = data_input
+				if data == 'X':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+28', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'Y':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+12', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'Z':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+28', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'U':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+20', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'V':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+20', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				else:
+					button = wx.StaticText(panel, wx.ID_ANY, '')
+				sizer_point_table.Add(button)
 		sizer_sections.Add(sizer_point_table, flag=wx.ALL, border=10)
 		
 		
@@ -638,6 +760,196 @@ class PolygonEditWindow(wx.Frame):
 		panel.SetSizer(sizer_sections)
 		sizer_sections.SetSizeHints(panel)
 		sizer_sections.SetSizeHints(self)
+
+	def on_copy_vertex(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copyX = self.inputs[('X', vert)].GetValue()
+		self.copyY = self.inputs[('Y', vert)].GetValue()
+		self.copyZ = self.inputs[('Z', vert)].GetValue()
+
+	def on_paste_vertex(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('X', vert)].SetValue(str(self.copyX))
+			self.inputs[('Y', vert)].SetValue(str(self.copyY))
+			self.inputs[('Z', vert)].SetValue(str(self.copyZ))
+			self.to_data(None)
+		except:
+			print("No vertex info to paste")
+
+	def on_copy_vertex_all(self, event):
+		self.copyXA = self.inputs[('X', 'A')].GetValue()
+		self.copyYA = self.inputs[('Y', 'A')].GetValue()
+		self.copyZA = self.inputs[('Z', 'A')].GetValue()
+		self.copyXB = self.inputs[('X', 'B')].GetValue()
+		self.copyYB = self.inputs[('Y', 'B')].GetValue()
+		self.copyZB = self.inputs[('Z', 'B')].GetValue()
+		self.copyXC = self.inputs[('X', 'C')].GetValue()
+		self.copyYC = self.inputs[('Y', 'C')].GetValue()
+		self.copyZC = self.inputs[('Z', 'C')].GetValue()
+		self.copyXD = self.inputs[('X', 'D')].GetValue()
+		self.copyYD = self.inputs[('Y', 'D')].GetValue()
+		self.copyZD = self.inputs[('Z', 'D')].GetValue()
+
+	def on_paste_vertex_all(self, event):
+		try:
+			self.inputs[('X', 'A')].SetValue(str(self.copyXA))
+			self.inputs[('Y', 'A')].SetValue(str(self.copyYA))
+			self.inputs[('Z', 'A')].SetValue(str(self.copyZA))
+			self.inputs[('X', 'B')].SetValue(str(self.copyXB))
+			self.inputs[('Y', 'B')].SetValue(str(self.copyYB))
+			self.inputs[('Z', 'B')].SetValue(str(self.copyZB))
+			self.inputs[('X', 'C')].SetValue(str(self.copyXC))
+			self.inputs[('Y', 'C')].SetValue(str(self.copyYC))
+			self.inputs[('Z', 'C')].SetValue(str(self.copyZC))
+			self.inputs[('X', 'D')].SetValue(str(self.copyXD))
+			self.inputs[('Y', 'D')].SetValue(str(self.copyYD))
+			self.inputs[('Z', 'D')].SetValue(str(self.copyZD))
+			self.to_data(None)
+		except:
+			print("No vertex info to paste")
+
+	def on_copy_UV(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copyU = self.inputs[('U', vert)].GetValue()
+		self.copyV = self.inputs[('V', vert)].GetValue()
+
+	def on_paste_UV(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('U', vert)].SetValue(str(self.copyU))
+			self.inputs[('V', vert)].SetValue(str(self.copyV))
+			self.to_data(None)
+		except:
+			print("No UV info to paste")
+	
+	def on_copy_UV_all(self, event):
+		self.copyUV_UA = self.inputs[('U', 'A')].GetValue()
+		self.copyUV_UB = self.inputs[('U', 'B')].GetValue()
+		self.copyUV_UC = self.inputs[('U', 'C')].GetValue()
+		self.copyUV_UD = self.inputs[('U', 'D')].GetValue()
+		self.copyUV_VA = self.inputs[('V', 'A')].GetValue()
+		self.copyUV_VB = self.inputs[('V', 'B')].GetValue()
+		self.copyUV_VC = self.inputs[('V', 'C')].GetValue()
+		self.copyUV_VD = self.inputs[('V', 'D')].GetValue()
+		
+	def on_paste_UV_all(self, event):
+		try:
+			self.inputs[('U', 'A')].SetValue(str(self.copyUV_UA))
+			self.inputs[('U', 'B')].SetValue(str(self.copyUV_UB))
+			self.inputs[('U', 'C')].SetValue(str(self.copyUV_UC))
+			self.inputs[('U', 'D')].SetValue(str(self.copyUV_UD))
+			self.inputs[('V', 'A')].SetValue(str(self.copyUV_VA))
+			self.inputs[('V', 'B')].SetValue(str(self.copyUV_VB))
+			self.inputs[('V', 'C')].SetValue(str(self.copyUV_VC))
+			self.inputs[('V', 'D')].SetValue(str(self.copyUV_VD))
+			self.to_data(None)
+		except:
+			print("No UV info to paste")
+
+	def on_copy_lighting(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copynE = self.inputs[('nE', vert)].GetValue()
+		self.copynA = self.inputs[('nA', vert)].GetValue()
+
+	def on_paste_lighting(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('nE', vert)].SetValue(str(self.copynE))
+			self.inputs[('nA', vert)].SetValue(str(self.copynA))
+			self.to_data(None)
+		except:
+			print("No nE/nA info to paste")
+	
+	def on_copy_lighting_all(self, event):
+		self.copy_nEA = self.inputs[('nE', 'A')].GetValue()
+		self.copy_nEB = self.inputs[('nE', 'B')].GetValue()
+		self.copy_nEC = self.inputs[('nE', 'C')].GetValue()
+		self.copy_nED = self.inputs[('nE', 'D')].GetValue()
+		self.copy_nAA = self.inputs[('nA', 'A')].GetValue()
+		self.copy_nAB = self.inputs[('nA', 'B')].GetValue()
+		self.copy_nAC = self.inputs[('nA', 'C')].GetValue()
+		self.copy_nAD = self.inputs[('nA', 'D')].GetValue()
+		
+	def on_paste_lighting_all(self, event):
+		try:
+			self.inputs[('nE', 'A')].SetValue(str(self.copy_nEA))
+			self.inputs[('nE', 'B')].SetValue(str(self.copy_nEB))
+			self.inputs[('nE', 'C')].SetValue(str(self.copy_nEC))
+			self.inputs[('nE', 'D')].SetValue(str(self.copy_nED))
+			self.inputs[('nA', 'A')].SetValue(str(self.copy_nAA))
+			self.inputs[('nA', 'B')].SetValue(str(self.copy_nAB))
+			self.inputs[('nA', 'C')].SetValue(str(self.copy_nAC))
+			self.inputs[('nA', 'D')].SetValue(str(self.copy_nAD))
+			self.to_data(None)
+		except:
+			print("No nE/nA info to paste")
 
 	def on_close(self, event):
 		self.app.uv_edit_window.close()
