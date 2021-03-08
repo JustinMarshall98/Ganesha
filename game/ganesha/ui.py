@@ -2484,57 +2484,99 @@ class MultiTerrainEditWindow(wx.Frame):
 
 
 
+
 class PaletteEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
+		# Configure window
 		self.app = parent
-		wx.Frame.__init__(self, parent.wx_win, ID, title,
-				wx.DefaultPosition, wx.DefaultSize)
+		wx.Frame.__init__(self, parent.wx_win, ID, title, wx.DefaultPosition, wx.DefaultSize)
 		self.Bind(wx.EVT_CLOSE, self.on_close)
 		self.palettes = []
+		
 		panel = wx.Panel(self, wx.ID_ANY)
 		sizer_sections = wx.BoxSizer(wx.VERTICAL)
-		# Color buttons
-		sizer_main_table = wx.FlexGridSizer(rows=16, cols=17)
+		
+		# Color buttons grid for all 16 palettes
+		sizer_color_table = wx.FlexGridSizer(rows=17, cols=19)
 		self.color_buttons = []
+		
+		# Top row header
+		sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+		for headerIndex in range(16):
+			sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY,  str(headerIndex)))
+		
+		sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY, '  ACT file'))
+		sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+			
+		#palette rows
 		for y in range(16):
-			label = wx.StaticText(panel, wx.ID_ANY, str(y))
-			sizer_main_table.Add(label)
+			label = wx.StaticText(panel, wx.ID_ANY, str(y), size=wx.Size(20,20))
+			sizer_color_table.Add(label)
 			for x in range(16):
 				button = wx.Window(panel, PALETTE_INPUT_ID + y*16 + x, size=wx.Size(20,20))
 				button.Bind(wx.EVT_LEFT_DOWN, self.on_color_button)
-				sizer_main_table.Add(button)
+				sizer_color_table.Add(button)
 				self.color_buttons.append(button)
-		sizer_sections.Add(sizer_main_table, flag=wx.ALL, border=10)
+				
+			button = wx.Button(panel, y, 'Import', size=wx.Size(50, -1))
+			button.Bind(wx.EVT_BUTTON, self.import_palette)
+			sizer_color_table.Add(button)
+			
+			button = wx.Button(panel, y, 'Export', size=wx.Size(50, -1))
+			button.Bind(wx.EVT_BUTTON, self.export_palette)
+			sizer_color_table.Add(button)
+				
+		sizer_sections.Add(sizer_color_table, flag=wx.ALL, border=10)
+		
 		# Color sliders
 		sizer_sliders_preview = wx.BoxSizer(wx.HORIZONTAL)
 		sizer_color_sliders = wx.BoxSizer(wx.VERTICAL)
 		self.color_sliders = []
 		self.color_inputs = []
-		for i, color in enumerate(['R', 'G', 'B', 'A']):
+		
+		for i, color in enumerate(['R', 'G', 'B']):
 			sizer_slide_input = wx.BoxSizer(wx.HORIZONTAL)
 			max_value = 31
-			if color == 'A':
-				max_value = 1
+			
 			color_label = wx.StaticText(panel, wx.ID_ANY, color, size=wx.Size(20, -1))
-			color_slider = wx.Slider(panel, 5000 + i, 0, 0, max_value, size=wx.Size(124, -1))
-			color_slider.Bind(wx.EVT_SCROLL, self.on_color_slide)
-			color_input = wx.TextCtrl(panel, 6000 + i)
-			color_input.Bind(wx.EVT_TEXT_ENTER, self.on_color_enter)
 			sizer_slide_input.Add(color_label, 0)
+			
+			color_slider = wx.Slider(panel, 5000 + i, 0, 0, max_value, size=wx.Size(290, -1))
+			color_slider.Bind(wx.EVT_SCROLL, self.on_color_slide)
+			color_slider.Disable()
 			sizer_slide_input.Add(color_slider, 0)
+			
+			color_input = wx.TextCtrl(panel, 6000 + i, size=wx.Size(40, -1))
+			color_input.Bind(wx.EVT_TEXT_ENTER, self.on_color_enter)
+			color_input.Disable()
 			sizer_slide_input.Add(color_input, 0)
+			
+			janky_padding = wx.StaticText(panel, wx.ID_ANY, '', size=wx.Size(20, -1))
+			sizer_slide_input.Add(janky_padding, 0)
+			
 			sizer_color_sliders.Add(sizer_slide_input)
 			self.color_sliders.append(color_slider)
 			self.color_inputs.append(color_input)
+			
 		sizer_sliders_preview.Add(sizer_color_sliders)
-		self.preview = wx.Window(panel, wx.ID_ANY, size=wx.Size(100, 100))
+		self.preview = wx.Window(panel, wx.ID_ANY, size=wx.Size(70, 70))
 		self.preview.SetBackgroundColour(wx.Colour(0, 0, 0))
 		sizer_sliders_preview.Add(self.preview)
 		sizer_sections.Add(sizer_sliders_preview, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+		
 		# Buttons
+		bottom_row_buttons = wx.BoxSizer(wx.HORIZONTAL)
+		
 		apply_button = wx.Button(panel, wx.ID_APPLY)
 		apply_button.Bind(wx.EVT_BUTTON, self.to_data)
-		sizer_sections.Add(apply_button, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+		bottom_row_buttons.Add(apply_button)
+		
+		export_default_palette_button = wx.Button(panel, wx.ID_ANY, 'Export Default palette')
+		export_default_palette_button.Bind(wx.EVT_BUTTON, self.export_default_palette)
+		bottom_row_buttons.Add(export_default_palette_button)
+		
+		sizer_sections.Add(bottom_row_buttons, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+		
 		panel.SetSizer(sizer_sections)
 		sizer_sections.SetSizeHints(self)
 		sizer_sections.SetSizeHints(panel)
@@ -2552,27 +2594,39 @@ class PaletteEditWindow(wx.Frame):
 		self.active_button = clicked
 		color = self.palettes[color_id / 16][color_id % 16]
 		for i, value in enumerate(color):
-			self.color_sliders[i].SetValue(value)
-			self.color_sliders[i].Update()
-			self.color_inputs[i].SetValue(str(value))
-			self.color_inputs[i].Update()
+			if i < 3:
+				self.color_sliders[i].SetValue(value)
+				self.color_sliders[i].Update()
+				self.color_inputs[i].SetValue(str(value))
+				self.color_inputs[i].Update()
+
 		self.preview.SetBackgroundColour(clicked.GetBackgroundColour())
 		self.preview.Refresh()
 
+		self.FindWindowById(5000).Enable()
+		self.FindWindowById(5001).Enable()
+		self.FindWindowById(5002).Enable()
+		self.FindWindowById(6000).Enable()
+		self.FindWindowById(6001).Enable()
+		self.FindWindowById(6002).Enable()
+		
+
+
 	def on_color_slide(self, event):
+		if not hasattr(self, 'active_button'):
+			return
+			
 		slider = event.GetId()
 		position = event.GetPosition()
 		color = slider - 5000
-		print(color, position)
 		color_input = self.color_inputs[color]
 		color_input.SetValue(str(position))
 		color_input.Update()
-		if not self.active_button:
-			return
+			
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		a = self.color_sliders[3].GetValue()
+		a = 1
 		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
 		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
 		self.set_button_color(self.active_button, r, g, b, a)
@@ -2591,9 +2645,6 @@ class PaletteEditWindow(wx.Frame):
 		elif newInt > 31:
 			newInt = 31
 		whichSlider = event.GetId() - 6000
-		#A max = 1
-		if whichSlider == 3 and newInt > 1:
-			newInt = 1
 		position = newInt
 		#Text update in case an out of bounds number is typed
 		color_input = self.color_inputs[whichSlider]
@@ -2607,9 +2658,11 @@ class PaletteEditWindow(wx.Frame):
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		a = self.color_sliders[3].GetValue()
+		#a = self.color_sliders[3].GetValue()
+		#Alpha slider has been removed
+		a = 0
 		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
-		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b)
 		self.set_button_color(self.active_button, r, g, b, a)
 		factor = 255.0 / 31.0
 		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
@@ -2626,6 +2679,113 @@ class PaletteEditWindow(wx.Frame):
 		b = int(b * factor)
 		button.SetBackgroundColour(wx.Colour(r, g, b))
 		button.Refresh()
+		
+	def set_button_id_color(self, button_id, r, g, b, a):
+		button = self.FindWindowById(button_id)
+		factor = 255.0 / 31.0
+		if (r, g, b, a) == (0, 0, 0):
+			button.SetForegroundColour(wx.Colour(255, 255, 255))
+		else:
+			button.SetForegroundColour(wx.Colour(r, g, b))
+		r = int(r * factor)
+		g = int(g * factor)
+		b = int(b * factor)
+		button.SetBackgroundColour(wx.Colour(r, g, b))
+		button.Refresh()
+		
+	def export_palette(self, event):
+		palette_id = event.GetId()
+		hex_list = [];
+		
+		for i, color in enumerate(self.palettes[palette_id]):
+			hex_list.append(color[0] * 8)
+			hex_list.append(color[1] * 8)
+			hex_list.append(color[2] * 8)
+		
+		extraBytesNeeded = (256 - 16) * 3
+		
+		for index in range(extraBytesNeeded):
+			hex_list.append(0)
+		
+		fileDialog = wx.FileDialog(self, 'Palette ACT', style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT, wildcard = 'ACT Files (*.ACT)|*.ACT;*.act')
+		fileDialog.SetFilename(self.app.world.map.gns.file_path + '.palette_' + str(palette_id) + '.act')
+		
+		
+		if fileDialog.ShowModal() == wx.ID_CANCEL:
+			fileDialog.Destroy()
+			return
+		
+		pathname = fileDialog.GetPath()
+		file = open (pathname, 'w') 
+		
+		for index in hex_list:
+			file.write(chr(index))
+			
+		file.close()
+		fileDialog.Destroy()
+		
+	def export_default_palette(self, event):
+		hex_list = [];
+		
+		for i in range(16):
+			hex_list.append(i * 17)
+			hex_list.append(i * 17)
+			hex_list.append(i * 17)
+		
+		extraBytesNeeded = (256 - 16) * 3
+		
+		for index in range(extraBytesNeeded):
+			hex_list.append(0)
+		
+		fileDialog = wx.FileDialog(self, 'Palette ACT', style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT, wildcard = 'ACT Files (*.ACT)|*.ACT;*.act')
+		fileDialog.SetFilename('default_fft_palette.act')
+		if fileDialog.ShowModal() == wx.ID_CANCEL:
+			fileDialog.Destroy()
+			return
+		
+		pathname = fileDialog.GetPath()
+		file = open (pathname, 'w') 
+		
+		for index in hex_list:
+			file.write(chr(index))
+			
+		file.close()
+		fileDialog.Destroy()
+		
+	def import_palette(self, event):
+		palette_id = event.GetId()
+		
+		fileDialog = wx.FileDialog(self, 'Import Palette from ACT', wildcard = 'ACT Files (*.ACT)|*.ACT;*.act')
+		
+		if fileDialog.ShowModal() == wx.ID_CANCEL:
+			fileDialog.Destroy()
+			return
+
+		pathname = fileDialog.GetPath()
+		file = open(pathname, 'r')
+		all_hex = file.read();
+		
+		hex_list = []
+		for index in all_hex:
+			int_value = int(ord(index) / 8)
+			hex_list.append(int_value)
+		
+		for index, color in enumerate(hex_list):
+			palette_length = 16
+			color_length = 3
+			
+			if(index % color_length == 0 and index < palette_length * color_length):
+				color_id = index / color_length
+				r = hex_list[index]
+				g = hex_list[index + 1]
+				b = hex_list[index + 2]
+				a = 1
+				self.palettes[palette_id][color_id] = (r, g, b, a)
+				self.set_button_id_color(PALETTE_INPUT_ID + palette_id * 16 + color_id, r, g, b, a)
+			
+		self.to_data(self)
+		file.close()
+		fileDialog.Destroy()
 
 	def from_data(self, palettes):
 		self.palettes = []
