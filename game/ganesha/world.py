@@ -1127,7 +1127,6 @@ class World(object):
 			polygon.source.D.point = fft.map.PointXYZ()
 			polygon.source.D.point.set_coords(copyingPolygon.source.D.point.X + xOffset, copyingPolygon.source.D.point.Y, copyingPolygon.source.D.point.Z)
 		if texture:
-			print("texture")
 			if not copyingPolygon.source.A.normal is None:
 				polygon.source.A.normal = fft.map.VectorXYZ()
 				polygon.source.A.normal.set_coords(copyingPolygon.source.A.normal.X, copyingPolygon.source.A.normal.Y, copyingPolygon.source.A.normal.Z)
