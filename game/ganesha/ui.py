@@ -2840,8 +2840,8 @@ class PaletteEditWindow(wx.Frame):
 			return
 
 		pathname = fileDialog.GetPath()
-		file = open(pathname, 'r')
-		all_hex = file.read();
+		file = open(pathname, 'rb')
+		all_hex = file.read()
 		
 		hex_list = []
 		for index in all_hex:
