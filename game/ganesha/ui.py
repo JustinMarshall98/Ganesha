@@ -473,7 +473,7 @@ class PolygonEditWindow(wx.Frame):
 		button.SetForegroundColour('blue')
 		button.Bind(wx.EVT_BUTTON, self.rotatePolygonCOnXZ)
 		sizer_rotate_colbuttons.Add(button)
-		
+
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate D 90\xb0')
 		button.SetForegroundColour(wx.Colour(175, 175, 0))
 		button.Bind(wx.EVT_BUTTON, self.rotatePolygonDOnXZ)
@@ -867,37 +867,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnXZ(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('X', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Z', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('X', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Z', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			x = int(self.inputs[('X', pts)].GetValue())
-			z = int(self.inputs[('Z', pts)].GetValue())
-			coordinates.append([x, z])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				x = int(self.inputs[('X', pts)].GetValue())
+				z = int(self.inputs[('Z', pts)].GetValue())
+				coordinates.append([x, z])
+			
+			for xNum in range(0,4):
+				for zNum in range(0,2):
+					coordinates[xNum][zNum] -= vector[zNum]
 		
-		for xNum in range(0,4):
-			for zNum in range(0,2):
-				coordinates[xNum][zNum] -= vector[zNum]
-	
-			tempvar = coordinates[xNum][0]
-			coordinates[xNum][0] = coordinates[xNum][1]
-			coordinates[xNum][1] = tempvar * -1
+				tempvar = coordinates[xNum][0]
+				coordinates[xNum][0] = coordinates[xNum][1]
+				coordinates[xNum][1] = tempvar * -1
 
-			coordinates[xNum][0] += vector[0]
-			coordinates[xNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Z', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)	
+				coordinates[xNum][0] += vector[0]
+				coordinates[xNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Z', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)	
 
 	def rotatePolygonAOnXY(self, event):
 	
@@ -1004,37 +1005,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnXY(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('X', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('X', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			x = int(self.inputs[('X', pts)].GetValue())
-			y = int(self.inputs[('Y', pts)].GetValue())
-			coordinates.append([x, y])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				x = int(self.inputs[('X', pts)].GetValue())
+				y = int(self.inputs[('Y', pts)].GetValue())
+				coordinates.append([x, y])
+			
+			for xNum in range(0,4):
+				for yNum in range(0,2):
+					coordinates[xNum][yNum] -= vector[yNum]
 		
-		for xNum in range(0,4):
-			for yNum in range(0,2):
-				coordinates[xNum][yNum] -= vector[yNum]
-	
-			tempvar = coordinates[xNum][0]
-			coordinates[xNum][0] = coordinates[xNum][1]
-			coordinates[xNum][1] = tempvar * -1
+				tempvar = coordinates[xNum][0]
+				coordinates[xNum][0] = coordinates[xNum][1]
+				coordinates[xNum][1] = tempvar * -1
 
-			coordinates[xNum][0] += vector[0]
-			coordinates[xNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)
+				coordinates[xNum][0] += vector[0]
+				coordinates[xNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)
 
 	def rotatePolygonAOnZY(self, event):
 	
@@ -1141,37 +1143,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnZY(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('Z', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('Z', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			z = int(self.inputs[('Z', pts)].GetValue())
-			y = int(self.inputs[('Y', pts)].GetValue())
-			coordinates.append([z, y])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				z = int(self.inputs[('Z', pts)].GetValue())
+				y = int(self.inputs[('Y', pts)].GetValue())
+				coordinates.append([z, y])
+			
+			for zNum in range(0,4):
+				for yNum in range(0,2):
+					coordinates[zNum][yNum] -= vector[yNum]
 		
-		for zNum in range(0,4):
-			for yNum in range(0,2):
-				coordinates[zNum][yNum] -= vector[yNum]
-	
-			tempvar = coordinates[zNum][0]
-			coordinates[zNum][0] = coordinates[zNum][1]
-			coordinates[zNum][1] = tempvar * -1
+				tempvar = coordinates[zNum][0]
+				coordinates[zNum][0] = coordinates[zNum][1]
+				coordinates[zNum][1] = tempvar * -1
 
-			coordinates[zNum][0] += vector[0]
-			coordinates[zNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)
+				coordinates[zNum][0] += vector[0]
+				coordinates[zNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)
 
 	def from_data(self, polygon):
 		for dim in ['X', 'Y', 'Z']:
