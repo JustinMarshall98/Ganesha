@@ -1111,7 +1111,6 @@ class World(object):
 		polygon = Polygon(self)
 		sides = 3 if isinstance(copyingPolygon.source, fft.map.Triangle) else 4
 		polygon.source = fft.map.Triangle() if sides == 3 else fft.map.Quad()
-		#
 		y = self.map.extents[0][1] - 12
 		
 		polygon.source.A = fft.map.Vertex()
@@ -1169,6 +1168,20 @@ class World(object):
 			polygon_id = next_polygon_id()
 			polygon.node_path.setTag('polygon_i', str(polygon_id))
 
+	def move_selected_tile(self, amount, selected):
+		for tile in selected:
+			if (tile.height + amount) < 0 or (tile.height + amount) > 63:
+				continue
+			tile.height += amount
+			tag = tile.node_path.getTag('tile_xyz')
+			tile.init_node_path()
+			tile.node_path.setTag('tile_xyz', tag)
+			if tile.is_selected:
+				tile.select()
+			#tile.init_node_path()
+			#if tile.is_selected:
+			#	tile.select()
+
 	def move_selected_poly(self, dim, amount, sign, selected):
 		import fft.map
 		from copy import deepcopy
@@ -1214,6 +1227,8 @@ class World(object):
 				polygon.source.D.point.set_coords(polygon.source.D.point.X + valueX, polygon.source.D.point.Y + valueY, polygon.source.D.point.Z + valueZ)
 			
 			polygon.init_node_path()
+			if polygon.is_selected:
+				polygon.select()
 		
 		reset_polygon_id()
 		for polygon in self.polygons:

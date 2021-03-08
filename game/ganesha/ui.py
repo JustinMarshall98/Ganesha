@@ -367,7 +367,7 @@ class PolygonEditWindow(wx.Frame):
 		panel = wx.Panel(self, wx.ID_ANY)
 		sizer_sections = wx.BoxSizer(wx.VERTICAL)
 		# Vertex point, normal, and UV coordinates
-		sizer_point_table = wx.FlexGridSizer(rows=9, cols=7)
+		sizer_point_table = wx.FlexGridSizer(rows=13, cols=7)
 		self.inputs = {}
 		for i, point in enumerate(['', '', 'A', 'B', 'C', 'D', '']):
 			point_label = wx.StaticText(panel, wx.ID_ANY, point, size=wx.Size(20, -1))
@@ -380,50 +380,172 @@ class PolygonEditWindow(wx.Frame):
 			elif point == 'D':
 				point_label.SetForegroundColour(wx.Colour(175, 175, 0))
 			sizer_point_table.Add(point_label)
-		for i, data in enumerate(['X', 'Y', 'Z', 'nE', 'nA', 'U', 'V']):
-			data_label = wx.StaticText(panel, wx.ID_ANY, data, size=wx.Size(20, -1))
-			sizer_point_table.Add(data_label)
+		for i, data in enumerate(['X', 'Y', 'Z', 'copyVector', 'pasteVector', 'nE', 'nA', 'copyLighting', 'pasteLighting', 'U', 'V', 'copyUV', 'pasteUV']):
+			if data == 'copyVector' or data == 'pasteVector' or data == 'copyLighting' or data == 'pasteLighting' or data == 'copyUV' or data == 'pasteUV':
+				data_label = wx.StaticText(panel, wx.ID_ANY, "", size=wx.Size(20, -1))
+			else:
+				data_label = wx.StaticText(panel, wx.ID_ANY, data, size=wx.Size(20, -1))
 			if data == 'X':
+				data_label.SetForegroundColour('red')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 0, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Y':
+				data_label.SetForegroundColour('green')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 2, '-12', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'Z':
+				data_label.SetForegroundColour('blue')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 4, '-28', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
+			elif data == 'copyVector':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_vertex_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteVector':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_vertex_all)
+				#sizer_point_table.Add(button)
+			elif data == 'copyLighting':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_lighting_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteLighting':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_lighting_all)
+				#sizer_point_table.Add(button)
+			elif data == 'copyUV':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Copy', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Copy All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_copy_UV_all)
+				#sizer_point_table.Add(button)
+			elif data == 'pasteUV':
+				sizer_point_table.Add(data_label)
+				sizer_point_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
+				button = wx.Button(panel, 0, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 1, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 2, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 3, 'Paste', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV)
+				sizer_point_table.Add(button)
+				button = wx.Button(panel, 4, 'Paste All', size=wx.Size(50, -1))
+				button.Bind(wx.EVT_BUTTON, self.on_paste_UV_all)
+				#sizer_point_table.Add(button)
 			elif data == 'U':
+				data_label.SetForegroundColour('purple')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 6, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			elif data == 'V':
+				data_label.SetForegroundColour('orange')
+				sizer_point_table.Add(data_label)
 				button = wx.Button(panel, POLYGON_MOVE_ID + 8, '-20', size=wx.Size(50, -1))
 				button.Bind(wx.EVT_BUTTON, self.on_move)
 			else:
+				sizer_point_table.Add(data_label)
 				button = wx.StaticText(panel, wx.ID_ANY, '')
 			sizer_point_table.Add(button)
-			for j, point in enumerate(['A', 'B', 'C', 'D']):
-				input_id = POLYGON_INPUT_ID + i * 4 + j
-				data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
-				sizer_point_table.Add(data_input)
-				self.inputs[(data, point)] = data_input
-			if data == 'X':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+28', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'Y':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+12', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'Z':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+28', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'U':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+20', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			elif data == 'V':
-				button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+20', size=wx.Size(50, -1))
-				button.Bind(wx.EVT_BUTTON, self.on_move)
-			else:
-				button = wx.StaticText(panel, wx.ID_ANY, '')
-			sizer_point_table.Add(button)
+			if data != 'copyVector' and data != 'pasteVector' and data != 'copyLighting' and data != 'pasteLighting' and data != 'copyUV' and data != 'pasteUV':
+				for j, point in enumerate(['A', 'B', 'C', 'D']):
+					input_id = POLYGON_INPUT_ID + i * 4 + j
+					data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
+					sizer_point_table.Add(data_input)
+					self.inputs[(data, point)] = data_input
+				if data == 'X':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 1, '+28', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'Y':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 3, '+12', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'Z':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 5, '+28', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'U':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 7, '+20', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				elif data == 'V':
+					button = wx.Button(panel, POLYGON_MOVE_ID + 9, '+20', size=wx.Size(50, -1))
+					button.Bind(wx.EVT_BUTTON, self.on_move)
+				else:
+					button = wx.StaticText(panel, wx.ID_ANY, '')
+				sizer_point_table.Add(button)
 		sizer_sections.Add(sizer_point_table, flag=wx.ALL, border=10)
 		
 		
@@ -473,7 +595,7 @@ class PolygonEditWindow(wx.Frame):
 		button.SetForegroundColour('blue')
 		button.Bind(wx.EVT_BUTTON, self.rotatePolygonCOnXZ)
 		sizer_rotate_colbuttons.Add(button)
-		
+
 		button = wx.Button(panel, wx.ID_ANY, 'Rotate D 90\xb0')
 		button.SetForegroundColour(wx.Colour(175, 175, 0))
 		button.Bind(wx.EVT_BUTTON, self.rotatePolygonDOnXZ)
@@ -638,6 +760,196 @@ class PolygonEditWindow(wx.Frame):
 		panel.SetSizer(sizer_sections)
 		sizer_sections.SetSizeHints(panel)
 		sizer_sections.SetSizeHints(self)
+
+	def on_copy_vertex(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copyX = self.inputs[('X', vert)].GetValue()
+		self.copyY = self.inputs[('Y', vert)].GetValue()
+		self.copyZ = self.inputs[('Z', vert)].GetValue()
+
+	def on_paste_vertex(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('X', vert)].SetValue(str(self.copyX))
+			self.inputs[('Y', vert)].SetValue(str(self.copyY))
+			self.inputs[('Z', vert)].SetValue(str(self.copyZ))
+			self.to_data(None)
+		except:
+			print("No vertex info to paste")
+
+	def on_copy_vertex_all(self, event):
+		self.copyXA = self.inputs[('X', 'A')].GetValue()
+		self.copyYA = self.inputs[('Y', 'A')].GetValue()
+		self.copyZA = self.inputs[('Z', 'A')].GetValue()
+		self.copyXB = self.inputs[('X', 'B')].GetValue()
+		self.copyYB = self.inputs[('Y', 'B')].GetValue()
+		self.copyZB = self.inputs[('Z', 'B')].GetValue()
+		self.copyXC = self.inputs[('X', 'C')].GetValue()
+		self.copyYC = self.inputs[('Y', 'C')].GetValue()
+		self.copyZC = self.inputs[('Z', 'C')].GetValue()
+		self.copyXD = self.inputs[('X', 'D')].GetValue()
+		self.copyYD = self.inputs[('Y', 'D')].GetValue()
+		self.copyZD = self.inputs[('Z', 'D')].GetValue()
+
+	def on_paste_vertex_all(self, event):
+		try:
+			self.inputs[('X', 'A')].SetValue(str(self.copyXA))
+			self.inputs[('Y', 'A')].SetValue(str(self.copyYA))
+			self.inputs[('Z', 'A')].SetValue(str(self.copyZA))
+			self.inputs[('X', 'B')].SetValue(str(self.copyXB))
+			self.inputs[('Y', 'B')].SetValue(str(self.copyYB))
+			self.inputs[('Z', 'B')].SetValue(str(self.copyZB))
+			self.inputs[('X', 'C')].SetValue(str(self.copyXC))
+			self.inputs[('Y', 'C')].SetValue(str(self.copyYC))
+			self.inputs[('Z', 'C')].SetValue(str(self.copyZC))
+			self.inputs[('X', 'D')].SetValue(str(self.copyXD))
+			self.inputs[('Y', 'D')].SetValue(str(self.copyYD))
+			self.inputs[('Z', 'D')].SetValue(str(self.copyZD))
+			self.to_data(None)
+		except:
+			print("No vertex info to paste")
+
+	def on_copy_UV(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copyU = self.inputs[('U', vert)].GetValue()
+		self.copyV = self.inputs[('V', vert)].GetValue()
+
+	def on_paste_UV(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('U', vert)].SetValue(str(self.copyU))
+			self.inputs[('V', vert)].SetValue(str(self.copyV))
+			self.to_data(None)
+		except:
+			print("No UV info to paste")
+	
+	def on_copy_UV_all(self, event):
+		self.copyUV_UA = self.inputs[('U', 'A')].GetValue()
+		self.copyUV_UB = self.inputs[('U', 'B')].GetValue()
+		self.copyUV_UC = self.inputs[('U', 'C')].GetValue()
+		self.copyUV_UD = self.inputs[('U', 'D')].GetValue()
+		self.copyUV_VA = self.inputs[('V', 'A')].GetValue()
+		self.copyUV_VB = self.inputs[('V', 'B')].GetValue()
+		self.copyUV_VC = self.inputs[('V', 'C')].GetValue()
+		self.copyUV_VD = self.inputs[('V', 'D')].GetValue()
+		
+	def on_paste_UV_all(self, event):
+		try:
+			self.inputs[('U', 'A')].SetValue(str(self.copyUV_UA))
+			self.inputs[('U', 'B')].SetValue(str(self.copyUV_UB))
+			self.inputs[('U', 'C')].SetValue(str(self.copyUV_UC))
+			self.inputs[('U', 'D')].SetValue(str(self.copyUV_UD))
+			self.inputs[('V', 'A')].SetValue(str(self.copyUV_VA))
+			self.inputs[('V', 'B')].SetValue(str(self.copyUV_VB))
+			self.inputs[('V', 'C')].SetValue(str(self.copyUV_VC))
+			self.inputs[('V', 'D')].SetValue(str(self.copyUV_VD))
+			self.to_data(None)
+		except:
+			print("No UV info to paste")
+
+	def on_copy_lighting(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		self.copynE = self.inputs[('nE', vert)].GetValue()
+		self.copynA = self.inputs[('nA', vert)].GetValue()
+
+	def on_paste_lighting(self, event):
+		command = event.GetId()
+		vert = ''
+		
+		if command == 0:
+			vert = 'A'
+		if command == 1:
+			vert = 'B'
+		if command == 2:
+			vert = 'C'
+		if command == 3:
+			vert = 'D'
+		
+		try:
+			self.inputs[('nE', vert)].SetValue(str(self.copynE))
+			self.inputs[('nA', vert)].SetValue(str(self.copynA))
+			self.to_data(None)
+		except:
+			print("No nE/nA info to paste")
+	
+	def on_copy_lighting_all(self, event):
+		self.copy_nEA = self.inputs[('nE', 'A')].GetValue()
+		self.copy_nEB = self.inputs[('nE', 'B')].GetValue()
+		self.copy_nEC = self.inputs[('nE', 'C')].GetValue()
+		self.copy_nED = self.inputs[('nE', 'D')].GetValue()
+		self.copy_nAA = self.inputs[('nA', 'A')].GetValue()
+		self.copy_nAB = self.inputs[('nA', 'B')].GetValue()
+		self.copy_nAC = self.inputs[('nA', 'C')].GetValue()
+		self.copy_nAD = self.inputs[('nA', 'D')].GetValue()
+		
+	def on_paste_lighting_all(self, event):
+		try:
+			self.inputs[('nE', 'A')].SetValue(str(self.copy_nEA))
+			self.inputs[('nE', 'B')].SetValue(str(self.copy_nEB))
+			self.inputs[('nE', 'C')].SetValue(str(self.copy_nEC))
+			self.inputs[('nE', 'D')].SetValue(str(self.copy_nED))
+			self.inputs[('nA', 'A')].SetValue(str(self.copy_nAA))
+			self.inputs[('nA', 'B')].SetValue(str(self.copy_nAB))
+			self.inputs[('nA', 'C')].SetValue(str(self.copy_nAC))
+			self.inputs[('nA', 'D')].SetValue(str(self.copy_nAD))
+			self.to_data(None)
+		except:
+			print("No nE/nA info to paste")
 
 	def on_close(self, event):
 		self.app.uv_edit_window.close()
@@ -867,37 +1179,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnXZ(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('X', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Z', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('X', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Z', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			x = int(self.inputs[('X', pts)].GetValue())
-			z = int(self.inputs[('Z', pts)].GetValue())
-			coordinates.append([x, z])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				x = int(self.inputs[('X', pts)].GetValue())
+				z = int(self.inputs[('Z', pts)].GetValue())
+				coordinates.append([x, z])
+			
+			for xNum in range(0,4):
+				for zNum in range(0,2):
+					coordinates[xNum][zNum] -= vector[zNum]
 		
-		for xNum in range(0,4):
-			for zNum in range(0,2):
-				coordinates[xNum][zNum] -= vector[zNum]
-	
-			tempvar = coordinates[xNum][0]
-			coordinates[xNum][0] = coordinates[xNum][1]
-			coordinates[xNum][1] = tempvar * -1
+				tempvar = coordinates[xNum][0]
+				coordinates[xNum][0] = coordinates[xNum][1]
+				coordinates[xNum][1] = tempvar * -1
 
-			coordinates[xNum][0] += vector[0]
-			coordinates[xNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Z', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)	
+				coordinates[xNum][0] += vector[0]
+				coordinates[xNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Z', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)	
 
 	def rotatePolygonAOnXY(self, event):
 	
@@ -1004,37 +1317,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnXY(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('X', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('X', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			x = int(self.inputs[('X', pts)].GetValue())
-			y = int(self.inputs[('Y', pts)].GetValue())
-			coordinates.append([x, y])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				x = int(self.inputs[('X', pts)].GetValue())
+				y = int(self.inputs[('Y', pts)].GetValue())
+				coordinates.append([x, y])
+			
+			for xNum in range(0,4):
+				for yNum in range(0,2):
+					coordinates[xNum][yNum] -= vector[yNum]
 		
-		for xNum in range(0,4):
-			for yNum in range(0,2):
-				coordinates[xNum][yNum] -= vector[yNum]
-	
-			tempvar = coordinates[xNum][0]
-			coordinates[xNum][0] = coordinates[xNum][1]
-			coordinates[xNum][1] = tempvar * -1
+				tempvar = coordinates[xNum][0]
+				coordinates[xNum][0] = coordinates[xNum][1]
+				coordinates[xNum][1] = tempvar * -1
 
-			coordinates[xNum][0] += vector[0]
-			coordinates[xNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['X', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)
+				coordinates[xNum][0] += vector[0]
+				coordinates[xNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['X', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)
 
 	def rotatePolygonAOnZY(self, event):
 	
@@ -1141,37 +1455,38 @@ class PolygonEditWindow(wx.Frame):
 		
 	def rotatePolygonDOnZY(self, event):
 	
-		vector = [0,0]
-		vector[0] = int(self.inputs[('Z', 'D')].GetValue())
-		vector[1] = int(self.inputs[('Y', 'D')].GetValue())
-		
-		coordinates = [];
+		if hasattr(self.app.selected_object.source, 'D'):
+			vector = [0,0]
+			vector[0] = int(self.inputs[('Z', 'D')].GetValue())
+			vector[1] = int(self.inputs[('Y', 'D')].GetValue())
+			
+			coordinates = [];
 
-		#copy to new list
-		for pts in ['D', 'C', 'A', 'B']:
-			z = int(self.inputs[('Z', pts)].GetValue())
-			y = int(self.inputs[('Y', pts)].GetValue())
-			coordinates.append([z, y])
+			#copy to new list
+			for pts in ['D', 'C', 'A', 'B']:
+				z = int(self.inputs[('Z', pts)].GetValue())
+				y = int(self.inputs[('Y', pts)].GetValue())
+				coordinates.append([z, y])
+			
+			for zNum in range(0,4):
+				for yNum in range(0,2):
+					coordinates[zNum][yNum] -= vector[yNum]
 		
-		for zNum in range(0,4):
-			for yNum in range(0,2):
-				coordinates[zNum][yNum] -= vector[yNum]
-	
-			tempvar = coordinates[zNum][0]
-			coordinates[zNum][0] = coordinates[zNum][1]
-			coordinates[zNum][1] = tempvar * -1
+				tempvar = coordinates[zNum][0]
+				coordinates[zNum][0] = coordinates[zNum][1]
+				coordinates[zNum][1] = tempvar * -1
 
-			coordinates[zNum][0] += vector[0]
-			coordinates[zNum][1] += vector[1]
-		
-		count = 0
-		
-		for pts in ['D', 'C', 'A', 'B']:
-			self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
-			self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
-		
-			count += 1
-		self.to_data(None)
+				coordinates[zNum][0] += vector[0]
+				coordinates[zNum][1] += vector[1]
+			
+			count = 0
+			
+			for pts in ['D', 'C', 'A', 'B']:
+				self.inputs['Z', pts].SetValue(str(coordinates[count][0]))
+				self.inputs['Y', pts].SetValue(str(coordinates[count][1]))
+			
+				count += 1
+			self.to_data(None)
 
 	def from_data(self, polygon):
 		for dim in ['X', 'Y', 'Z']:
@@ -1831,8 +2146,15 @@ class TerrainDimensionsEditWindow(wx.Frame):
 	def on_ok(self, event):
 		new_x = int(self.input_x.GetValue())
 		new_z = int(self.input_z.GetValue())
-		self.app.world.resize_terrain(new_x, new_z)
-		self.on_close(None)
+		if (new_x == 0 or new_z == 0):
+			print("Terrain Dimension Warning: X and Z can't be equal to 0 (nonexistant size).")
+		elif (new_x == 256 or new_z == 256):
+			print("Terrain Dimension Warning: X and Z can't be equal to 256 (ubyte range 0-255).")
+		elif (new_x * new_z > 256):
+			print("Terrain Dimension Warning: (X*Z) cannot be greater than 256. (256 tile maximum for maps)")
+		else:
+			self.app.world.resize_terrain(new_x, new_z)
+			self.on_close(None)
 
 	def on_close(self, event):
 		self.MakeModal(False)
@@ -1998,8 +2320,30 @@ class TerrainEditWindow(wx.Frame):
 		tiles.append(self.app.world.terrain.tiles[1][z][x])
 		for i, tile in enumerate(tiles):
 			tile.height = int(self.inputs[(i, 'height')].GetValue())
+			if(tile.height < 0):
+				tile.height = 0
+				print("Terrain Warning: Height can't be less than 0.")
+
+			#Info from Xifanie, max height is 63.5?
+			elif(tile.height > 63):
+				tile.height = 63
+				print("Terrain Warning: Height can't be greater than 63.")
 			tile.depth = int(self.inputs[(i, 'depth')].GetValue())
+			if(tile.depth < 0):
+				tile.depth = 0
+				print("Terrain Warning: Depth can't be less than 0.")
+			#Current max depth game allows is unknown, but ubyte max is 255
+			elif(tile.depth > 255):
+				tile.depth = 255
+				print("Terrain Warning: Depth can't be greater than 255.")
 			tile.slope_height = int(self.inputs[(i, 'slope_height')].GetValue())
+			if(tile.slope_height < 0):
+				tile.slope_height = 0
+				print("Terrain Warning: Slope Height can't be less than 0.")
+			#Current max slope game allows is unknown, but ubyte max is 255
+			elif(tile.slope_height > 255):
+				tile.slope_height = 255
+				print("Terrain Warning: Slope Height can't be greater than 255.")
 			tile.slope_type = slope_types[self.inputs[(i, 'slope_type')].GetCurrentSelection()][0]
 			tile.surface_type = self.inputs[(i, 'surface_type')].GetCurrentSelection()
 			tile.cant_walk = 1 if self.inputs[(i, 'cant_walk')].GetValue() else 0
@@ -2010,6 +2354,127 @@ class TerrainEditWindow(wx.Frame):
 			tile.node_path.setTag('tile_xyz', tag)
 			if tile.is_selected:
 				tile.select()
+
+class MultiTerrainEditWindow(wx.Frame):
+	def __init__(self, parent, ID, title):
+		self.app = parent
+		wx.Frame.__init__(self, parent.wx_win, ID, title,
+				wx.DefaultPosition, wx.DefaultSize)
+		self.Bind(wx.EVT_CLOSE, self.on_close)
+		panel = wx.Panel(self, wx.ID_ANY)
+		sizer_sections = wx.BoxSizer(wx.VERTICAL)
+		sizer_main_table = wx.FlexGridSizer(rows=8, cols=2)
+		self.inputs = {}
+		# Heading
+		label = wx.StaticText(panel, wx.ID_ANY, '')
+		sizer_main_table.Add(label)
+		label = wx.StaticText(panel, wx.ID_ANY, 'Tile')
+		sizer_main_table.Add(label)
+		# Height
+		label = wx.StaticText(panel, wx.ID_ANY, 'Height')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 1)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'height')] = data_input
+		# Depth
+		label = wx.StaticText(panel, wx.ID_ANY, 'Depth')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 3)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'depth')] = data_input
+		# Slope
+		label = wx.StaticText(panel, wx.ID_ANY, 'Slope')
+		sizer_main_table.Add(label)
+		data_input = wx.TextCtrl(panel, TERRAIN_INPUT_ID + 5)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'slope_height')] = data_input
+		# Slope Type
+		label = wx.StaticText(panel, wx.ID_ANY, 'Slope Type')
+		sizer_main_table.Add(label)
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 7, choices=slope_type_names)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'slope_type')] = data_input
+		# Surface
+		label = wx.StaticText(panel, wx.ID_ANY, 'Surface')
+		sizer_main_table.Add(label)
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=surface_types.values())
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'surface_type')] = data_input
+		# Impassable
+		label = wx.StaticText(panel, wx.ID_ANY, 'Impassable')
+		sizer_main_table.Add(label)
+		data_input = wx.CheckBox(panel, TERRAIN_INPUT_ID + 11)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'cant_walk')] = data_input
+		# Unselectable
+		label = wx.StaticText(panel, wx.ID_ANY, 'Unselectable')
+		sizer_main_table.Add(label)
+		data_input = wx.CheckBox(panel, TERRAIN_INPUT_ID + 13)
+		sizer_main_table.Add(data_input)
+		self.inputs[(0, 'cant_cursor')] = data_input
+		sizer_sections.Add(sizer_main_table, flag=wx.ALL, border=10)
+		# Buttons
+		apply_button = wx.Button(panel, wx.ID_APPLY)
+		apply_button.Bind(wx.EVT_BUTTON, self.to_data)
+		sizer_sections.Add(apply_button, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
+		panel.SetSizer(sizer_sections)
+		sizer_sections.SetSizeHints(panel)
+		sizer_sections.SetSizeHints(self)
+
+	def on_close(self, event):
+		self.Show(False)
+
+	def clear_inputs(self):
+		#print 'clearing'
+		pass
+
+	def to_data(self, foo):
+		for tile in self.app.selected_objects:
+			if self.inputs[(0, 'height')].GetValue():
+				print("height", self.inputs[(0, 'height')].GetValue())
+				tile.height = int(self.inputs[(0, 'height')].GetValue())
+				if(tile.height < 0):
+					tile.height = 0
+					print("Terrain Warning: Height can't be less than 0.")
+				#Info from Xifanie, max height is 63.5?
+				elif(tile.height > 63):
+					tile.height = 63
+					print("Terrain Warning: Height can't be greater than 63.")
+			if self.inputs[(0, 'depth')].GetValue():
+				print("depth", self.inputs[(0, 'depth')].GetValue())
+				tile.depth = int(self.inputs[(0, 'depth')].GetValue())
+				if(tile.depth < 0):
+					tile.depth = 0
+					print("Terrain Warning: Depth can't be less than 0.")
+				#Current max depth game allows is unknown, but ubyte max is 255
+				elif(tile.depth > 255):
+					tile.depth = 255
+					print("Terrain Warning: Depth can't be greater than 255.")
+			if self.inputs[(0, 'slope_height')].GetValue():
+				print("slope_height", self.inputs[(0, 'slope_height')].GetValue())
+				tile.slope_height = int(self.inputs[(0, 'slope_height')].GetValue())
+				if(tile.slope_height < 0):
+					tile.slope_height = 0
+					print("Terrain Warning: Depth can't be less than 0.")
+				#Current max slope_height game allows is unknown, but ubyte max is 255
+				elif(tile.slope_height > 255):
+					tile.slope_height = 255
+					print("Terrain Warning: Depth can't be greater than 255.")
+			if self.inputs[(0, 'slope_type')].GetCurrentSelection():
+				tile.slope_type = slope_types[self.inputs[(0, 'slope_type')].GetCurrentSelection()][0]
+			if self.inputs[(0, 'surface_type')].GetCurrentSelection():
+				tile.surface_type = self.inputs[(0, 'surface_type')].GetCurrentSelection()
+
+			tile.cant_walk = 1 if self.inputs[(0, 'cant_walk')].GetValue() else 0
+			tile.cant_cursor = 1 if self.inputs[(0, 'cant_cursor')].GetValue() else 0
+				
+			tag = tile.node_path.getTag('tile_xyz')
+			tile.init_node_path()
+			tile.node_path.setTag('tile_xyz', tag)
+			if tile.is_selected:
+				tile.select()
+
+
 
 
 class PaletteEditWindow(wx.Frame):
@@ -2542,6 +3007,7 @@ class Map_Viewer(DirectObject):
 		self.accept('delete', self.delete_selected)
 		self.accept('escape', self.open_settings_window)
 		self.accept('control-a', self.select_all)
+		self.accept('tab', self.open_multi_terrain_editor)
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
@@ -2566,61 +3032,85 @@ class Map_Viewer(DirectObject):
 			self.selected_objects.append(obj)
 		
 	def copy_polygon(self):
-		polygon = self.selected_object
-		if polygon is not None:
-			self.world.copy_polygon_to_XOffset(polygon, 0 * 28, True)
-		pass
+		texture = True
+		if not len(self.selected_objects) == 0:
+			for poly in self.selected_objects:
+				if(poly.source.unknown5 is not None):
+					texture = False
+				if poly is not None:
+					self.world.copy_polygon_to_XOffset(poly, 0 * 28, texture)
+		elif self.selected_object:
+			if(self.selected_object.source.unknown5 is not None):
+				texture = False
+			self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, texture)
 
 	def increase_Y(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+		else: #It is a tile
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_tile(1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_tile(1, [self.selected_object])
 
 	def decrease_Y(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+		else: #It is a tile
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_tile(-1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_tile(-1, [self.selected_object])
 
 	def increase_X(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('X', 28, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('X', 28, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('X', 28, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('X', 28, 1, [self.selected_object])
 
 	def decrease_X(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('X', 28, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('X', 28, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('X', 28, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('X', 28, -1, [self.selected_object])
 		
 	def increase_Z(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
 
 	def decrease_Z(self):
-		if not len(self.selected_objects) == 0:
-			self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
-		elif self.selected_object:
-			self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
+			elif self.selected_object:
+				self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
 
 	def delete_selected(self):
-		if not len(self.selected_objects) == 0:
-			for obj in self.selected_objects:
-				self.world.delete_polygon(obj)
+		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
+			if not len(self.selected_objects) == 0:
+				for obj in self.selected_objects:
+					self.world.delete_polygon(obj)
+					self.unselect()
+					self.polygon_edit_window.clear_inputs()
+					self.polygon_edit_window.Show(False)
+					self.uv_edit_window.close()
+			elif self.selected_object:
+				self.world.delete_polygon(self.selected_object)
 				self.unselect()
 				self.polygon_edit_window.clear_inputs()
 				self.polygon_edit_window.Show(False)
 				self.uv_edit_window.close()
-		elif self.selected_object:
-			self.world.delete_polygon(self.selected_object)
-			self.unselect()
-			self.polygon_edit_window.clear_inputs()
-			self.polygon_edit_window.Show(False)
-			self.uv_edit_window.close()
 	
 		
 	def start(self, gns_path):
@@ -2633,6 +3123,7 @@ class Map_Viewer(DirectObject):
 		self.uv_edit_window = UVEditWindow(self)
 		self.accept('uv_edit_window_closed', self.uv_edit_window.on_close)
 		self.terrain_edit_window = TerrainEditWindow(self, -1, 'Edit Terrain')
+		self.multi_terrain_edit_window = MultiTerrainEditWindow(self, -1, 'Edit Multiple Terrains')
 		self.terrain_dimensions_edit_window = TerrainDimensionsEditWindow(self, -1, 'Edit Terrain Dimensions')
 		self.move_all_polygons_edit_window = MoveAllPolygonsEditWindow(self, -1, 'Move All Polygons')
 		self.palette_edit_window = PaletteEditWindow(self, -1, 'Edit Palettes')
@@ -2737,6 +3228,11 @@ class Map_Viewer(DirectObject):
 
 	def open_settings_window(self):
 		self.settings_window.Show(True)	
+
+	def open_multi_terrain_editor(self):
+		self.multi_terrain_edit_window.clear_inputs()
+		self.multi_terrain_edit_window.Show(True)
+		self.multi_terrain_edit_window.Raise()
 			
 			
 	def edit_terrain_dimensions(self):
@@ -2769,8 +3265,13 @@ class Map_Viewer(DirectObject):
 			if self.multiSelect:
 				#If the object is not already selected
 				if not hovered_object in self.selected_objects:
-					self.selected_objects.append(hovered_object)
-					hovered_object.select()
+					#If the list is empty, or if the types in the list match the type selected (so we don't mix Tile / Poly)
+					if len(self.selected_objects) == 0 or type(self.selected_objects[0]) == type(hovered_object):
+						self.selected_objects.append(hovered_object)
+						hovered_object.select()
+					#If the user tries to multi-select polygons and tiles together, don't
+					else:
+						pass
 				#If the object is already selected
 				else:
 					self.selected_objects.remove(hovered_object)
@@ -2798,6 +3299,8 @@ class Map_Viewer(DirectObject):
 			self.uv_edit_window.close()
 			self.terrain_edit_window.clear_inputs()
 			self.terrain_edit_window.Show(False)
+			self.multi_terrain_edit_window.clear_inputs()
+			self.multi_terrain_edit_window.Show(False)
 
 	def unselect(self):
 		if not self.multiSelect:
