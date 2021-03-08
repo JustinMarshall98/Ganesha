@@ -31,7 +31,7 @@ Jumza: Owner of the repo, updated Ganesha to v0.73 and beyond
 Changelog
 =========
 2021-03-08 - v0.74 - Jumza Update
- - Fixed the Saving a [0,0] tile Map Bug and capped the max tile count at 256
+ - Fixed the Saving a [0,0] tile Map Bug and capped the max tile count at 256. Any side of the map must be between 1 and 255 tiles.
  - Fixed UV to be bound to values between [0,255] to prevent crashing
  - Fixed bug where copying black polygons would cause Ganesha to crash while saving
  - Polygons without a D point can no longer "rotate" around it
