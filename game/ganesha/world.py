@@ -1111,7 +1111,6 @@ class World(object):
 		polygon = Polygon(self)
 		sides = 3 if isinstance(copyingPolygon.source, fft.map.Triangle) else 4
 		polygon.source = fft.map.Triangle() if sides == 3 else fft.map.Quad()
-		#
 		y = self.map.extents[0][1] - 12
 		
 		polygon.source.A = fft.map.Vertex()

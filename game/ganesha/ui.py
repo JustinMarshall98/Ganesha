@@ -2561,11 +2561,17 @@ class Map_Viewer(DirectObject):
 		self.multiSelect = False
 		
 	def copy_polygon(self):
+    texture = True
 		if not len(self.selected_objects) == 0:
 			for poly in self.selected_objects:
-				self.world.copy_polygon_to_XOffset(poly, 0 * 28, True)
+				if(poly.source.unknown5 is not None):
+          texture = False
+        if poly is not None:
+          self.world.copy_polygon_to_XOffset(polygon, 0 * 28, texture)
 		elif self.selected_object:
-			self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, True)
+      if(self.selected_object.source.unknown5 is not None):
+          texture = False
+			self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, texture)
 
 	def increase_Y(self):
 		if not len(self.selected_objects) == 0:
