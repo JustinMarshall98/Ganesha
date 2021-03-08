@@ -3216,17 +3216,19 @@ class Map_Viewer(DirectObject):
 				self.selected_objects.append(obj)
 		
 	def copy_polygon(self):
-		if not len(self.selected_objects) == 0:
-			for poly in self.selected_objects:
-				texture = True
-				if(poly.source.unknown5 is not None):
+		texture = True
+		if isinstance(self.selected_object, Polygon) or (len(self.selected_objects) > 0 and isinstance(self.selected_objects[0], Polygon)):
+			if not len(self.selected_objects) == 0:
+				for poly in self.selected_objects:
+					texture = True
+					if(poly.source.unknown5 is not None):
+						texture = False
+					if poly is not None:
+						self.world.copy_polygon_to_XOffset(poly, 0 * 28, texture)
+			elif self.selected_object:
+				if(self.selected_object.source.unknown5 is not None):
 					texture = False
-				if poly is not None:
-					self.world.copy_polygon_to_XOffset(poly, 0 * 28, texture)
-		elif self.selected_object:
-			if(self.selected_object.source.unknown5 is not None):
-				texture = False
-			self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, texture)
+				self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, texture)
 
 	def increase_Y(self):
 		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):

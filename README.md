@@ -24,12 +24,26 @@ Gomtuu: Creating Ganesha and bringing it up to v0.60, creating all of the origin
 
 Twinees: Updating Ganesha to v0.72 and bringing it into TECHNICOLOR
 
+Garmichael: Created Import / Export function for Palettes (ACT format), contributed to v0.74 Update
+
 Jumza: Owner of the repo, updated Ganesha to v0.73 and beyond
    
 Changelog
 =========
-2021-??-?? - v0.74 - Jumza Update
+2021-03-08 - v0.74 - Jumza Update
  - Fixed the Saving a [0,0] tile Map Bug and capped the max tile count at 256
+ - Fixed UV to be bound to values between [0,255] to prevent crashing
+ - Fixed bug where copying black polygons would cause Ganesha to crash while saving
+ - Polygons without a D point can no longer "rotate" around it
+ - Polygons and tiles will remain green after being moved with hotkeys
+ - Polygons and tiles can correctly no longer be selected together
+ - XYZ in polygon editing window now match XYZ axis in the map viewer
+ - Import / Export function added to the palette window (ACT format). Credit to Garmichael for fully implementing this feature.
+ - Select all polygons / tiles with CTRL+A. Cycle through different terrain levels (or all tiles) by hitting ctrl+a repeatedly
+ - Added in height changing hotkeys for terrain tiles
+ - Added a new window for modifying many attributes of multiple terrain tiles at once (Hit tab with multiple tiles selected)
+ - Polygon editing window now has column-based Copy/Paste buttons for values
+ - Added in functionality for copying multiple polygons at once
 
 2021-02-28 - v0.73 - Jumza Update
  - Added the ability to select / unselect multiple polygons at once for mass editing / deleting
