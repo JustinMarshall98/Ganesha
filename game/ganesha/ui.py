@@ -1831,8 +1831,15 @@ class TerrainDimensionsEditWindow(wx.Frame):
 	def on_ok(self, event):
 		new_x = int(self.input_x.GetValue())
 		new_z = int(self.input_z.GetValue())
-		self.app.world.resize_terrain(new_x, new_z)
-		self.on_close(None)
+		if (new_x == 0 or new_z == 0):
+			print("Terrain Dimension Warning: X and Z can't be equal to 0 (nonexistant size).")
+		elif (new_x == 256 or new_z == 256):
+			print("Terrain Dimension Warning: X and Z can't be equal to 256 (ubyte range 0-255).")
+		elif (new_x * new_z > 256):
+			print("Terrain Dimension Warning: (X*Z) cannot be greater than 256. (256 tile maximum for maps)")
+		else:
+			self.app.world.resize_terrain(new_x, new_z)
+			self.on_close(None)
 
 	def on_close(self, event):
 		self.MakeModal(False)
