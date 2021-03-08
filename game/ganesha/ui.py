@@ -2094,10 +2094,13 @@ class SettingsWindow(wx.Frame):
 		"i: Import Texture\tp: Edit palette\n\n" +
 		"l: Edit lighting\t\t+: Add polygon\n\n" +
 		"d: Edit terrain dimensions\n\n" +
-		"f: Copy selected polygon (Only singularly selected Polygons)\n\n" +
+		"f: Copy selected polygons\n\n" +
 		"u: Move all polygons\n\n" +
+		"Tab: While multiple terrain tiles are selected, open multi-tile editing window\n\n" +
+		"CTRL + A: Select all Polygons / Tiles depending on view.\nCTRL + A repeatedly: In terrain view, cycle through multiple levels.\n\n" +
 		"Holding CTRL: Allows selection of multiple polygons\non which you can perform the following on:\n\n" +
 		"q: Decrease Y (12)\te: Increase Y (12)\n\n" +
+		"q: Decrease Tile height (1) \te: Increase Tile height (1)\n\n" +
 		"Up: Increase X (28)\tDown: Decrease X (28)\n\n" +
 		"Left: Increase Z (28)\tRight: Decrease Z (28)\n\n" +
 		"del: Delete selected polygons (Warning: No confirmation menu given)")

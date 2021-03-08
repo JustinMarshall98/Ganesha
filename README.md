@@ -37,7 +37,7 @@ Changelog
  - Polygons without a D point can no longer "rotate" around it
  - Polygons and tiles will remain green after being moved with hotkeys
  - Polygons and tiles can correctly no longer be selected together
- - XYZ in polygon editing window now match XYZ axis in the map viewer
+ - XYZ colour in polygon editing window now match XYZ axis colours in the map viewer
  - Import / Export function added to the palette window (ACT format). Credit to Garmichael for fully implementing this feature.
  - Select all polygons / tiles with CTRL+A. Cycle through different terrain levels (or all tiles) by hitting ctrl+a repeatedly
  - Added in height changing hotkeys for terrain tiles
