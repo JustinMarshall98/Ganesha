@@ -1,6 +1,7 @@
 from os.path import getsize
 from struct import pack, unpack
 from math import ceil
+from datetime import datetime
 
 
 class Resource(object):
@@ -46,6 +47,8 @@ class Resource(object):
         for chunk in self.chunks:
             data += chunk
         print 'Writing', self.file_path
+        dateTime = datetime.now()
+        print dateTime
         old_size = self.size
         self.size = len(data)
         old_sectors = int(ceil(old_size / 2048.0))

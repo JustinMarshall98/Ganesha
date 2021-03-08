@@ -44,6 +44,8 @@ Changelog
  - Added a new window for modifying many attributes of multiple terrain tiles at once (Hit tab with multiple tiles selected)
  - Polygon editing window now has column-based Copy/Paste buttons for values
  - Added in functionality for copying multiple polygons at once
+ - Added +1/-1 buttons for XYZ and UV
+ - Added Timestamp into console window when saving
 
 2021-02-28 - v0.73 - Jumza Update
  - Added the ability to select / unselect multiple polygons at once for mass editing / deleting
