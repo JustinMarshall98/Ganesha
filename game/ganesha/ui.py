@@ -3032,9 +3032,9 @@ class Map_Viewer(DirectObject):
 			self.selected_objects.append(obj)
 		
 	def copy_polygon(self):
-		texture = True
 		if not len(self.selected_objects) == 0:
 			for poly in self.selected_objects:
+				texture = True
 				if(poly.source.unknown5 is not None):
 					texture = False
 				if poly is not None:
