@@ -3494,9 +3494,15 @@ class Map_Viewer(DirectObject):
 		self.settings_window.Show(True)	
 
 	def open_multi_terrain_editor(self):
-		self.multi_terrain_edit_window.clear_inputs()
-		self.multi_terrain_edit_window.Show(True)
-		self.multi_terrain_edit_window.Raise()
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Tile):
+				self.multi_terrain_edit_window.clear_inputs()
+				self.multi_terrain_edit_window.Show(True)
+				self.multi_terrain_edit_window.Raise()
+		elif isinstance(self.selected_object, Tile):
+			self.multi_terrain_edit_window.clear_inputs()
+			self.multi_terrain_edit_window.Show(True)
+			self.multi_terrain_edit_window.Raise()
 			
 			
 	def edit_terrain_dimensions(self):
@@ -3541,10 +3547,14 @@ class Map_Viewer(DirectObject):
 					self.selected_objects.remove(hovered_object)
 					hovered_object.unselect()
 			else:
+				self.multi_terrain_edit_window.clear_inputs()
+				self.multi_terrain_edit_window.Show(False)
 				self.selected_object = hovered_object
 				self.selected_object.select()
 
 			if isinstance(self.selected_object, Polygon):
+				self.multi_terrain_edit_window.clear_inputs()
+				self.multi_terrain_edit_window.Show(False)
 				self.terrain_edit_window.clear_inputs()
 				self.terrain_edit_window.Show(False)
 				self.polygon_edit_window.from_data(self.selected_object)
