@@ -3309,72 +3309,72 @@ class Map_Viewer(DirectObject):
 				self.world.copy_polygon_to_XOffset(self.selected_object, 0 * 28, texture)
 
 	def increase_Y(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('Y', 12, 1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
-		else: #It is a tile
-			if not len(self.selected_objects) == 0:
+			else: #It is a tile
 				self.world.move_selected_tile(1, self.selected_objects)
-			elif self.selected_object:
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('Y', 12, 1, [self.selected_object])
+		else: #It is a tile
+			if self.selected_object:
 				self.world.move_selected_tile(1, [self.selected_object])
 
 	def decrease_Y(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('Y', 12, -1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
-		else: #It is a tile
-			if not len(self.selected_objects) == 0:
+			else: #It is a tile
 				self.world.move_selected_tile(-1, self.selected_objects)
-			elif self.selected_object:
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('Y', 12, -1, [self.selected_object])
+		else: #It is a tile
+			if self.selected_object:
 				self.world.move_selected_tile(-1, [self.selected_object])
 
 	def increase_X(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('X', 28, 1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('X', 28, 1, [self.selected_object])
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('X', 28, 1, [self.selected_object])
 
 	def decrease_X(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('X', 28, -1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('X', 28, -1, [self.selected_object])
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('X', 28, -1, [self.selected_object])
 		
 	def increase_Z(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('Z', 28, 1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('Z', 28, 1, [self.selected_object])
 
 	def decrease_Z(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				self.world.move_selected_poly('Z', 28, -1, self.selected_objects)
-			elif self.selected_object:
-				self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
+		elif isinstance(self.selected_object, Polygon):
+			self.world.move_selected_poly('Z', 28, -1, [self.selected_object])
 
 	def delete_selected(self):
-		if isinstance(self.selected_object, Polygon) or isinstance(self.selected_objects[0], Polygon):
-			if not len(self.selected_objects) == 0:
+		if len(self.selected_objects) > 0:
+			if isinstance(self.selected_objects[0], Polygon):
 				for obj in self.selected_objects:
 					self.world.delete_polygon(obj)
 					self.unselect()
 					self.polygon_edit_window.clear_inputs()
 					self.polygon_edit_window.Show(False)
 					self.uv_edit_window.close()
-			elif self.selected_object:
-				self.world.delete_polygon(self.selected_object)
-				self.unselect()
-				self.polygon_edit_window.clear_inputs()
-				self.polygon_edit_window.Show(False)
-				self.uv_edit_window.close()
+		elif isinstance(self.selected_object, Polygon):
+			self.world.delete_polygon(self.selected_object)
+			self.unselect()
+			self.polygon_edit_window.clear_inputs()
+			self.polygon_edit_window.Show(False)
+			self.uv_edit_window.close()
 	
 		
 	def start(self, gns_path):
