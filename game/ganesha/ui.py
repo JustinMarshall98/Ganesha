@@ -2547,7 +2547,6 @@ class Map_Viewer(DirectObject):
 		self.state.request('Spin')
 		self.selected_objects = []
 		self.multiSelect = False
-		self.cameraPan = False
 		self.accept('control', self.multi_select)
 		self.accept('control-up', self.end_multi_select)
 		self.accept('q', self.decrease_Y)
@@ -2558,18 +2557,9 @@ class Map_Viewer(DirectObject):
 		self.accept('arrow_left', self.increase_Z)
 		self.accept('delete', self.delete_selected)
 		self.accept('escape', self.open_settings_window)
-		self.accept('alt', self.panning_mode)
-		self.accept('alt-up', self.end_panning_mode)
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
-	def panning_mode(self):
-		print("panning mode")
-		self.cameraPan = True
-	
-	def end_panning_mode(self):
-		print("panning mode end")
-		self.cameraPan = False
 
 	def multi_select(self):
 		self.multiSelect = True

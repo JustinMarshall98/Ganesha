@@ -871,50 +871,18 @@ class World(object):
 		z = sin(pi * elevation / 180) * self.map.hypotenuse
 		x = cos(pi * azimuth / 180) * y
 		y = sin(pi * azimuth / 180) * y
-		print(self.center_x, self.center_y, self.center_z, base.camera.getPos())
-		print(x, y, z)
-		print(base.camera.getH(), base.camera.getP())
 		base.camera.setPos(self.center_x + x, self.center_y + y, self.center_z + z)
 		from pandac.PandaModules import Point3, Vec3
 		base.camera.lookAt(Point3(self.center_x, self.center_y, self.center_z))
 
 	def set_camera_pos(self, deltaX, deltaY):
-		#from math import sin, cos, pi
-		#azimuth = base.camera.getH()
-		#elevation = base.camera.getP()
-		#y = cos(pi * elevation / 180) * self.map.hypotenuse
-		#z = sin(pi * elevation / 180) * self.map.hypotenuse
-		#x = cos(pi * azimuth / 180) * y
-		#y = sin(pi * azimuth / 180) * y
-
-		#y = cos(azimuth)
-		#x = 1-y
-		#x = x * (deltaX * 100)
-		#y = y * (deltaX * 100)
-		#z = 0 #test
-		#z = z * deltaY * 10
-
-		#self.center_x -= y
-		#self.center_y += x
-		#self.center_z += z
-		#base.camera.setPos(self.center_x, self.center_y, self.center_z)
-		xz = base.camera.getNetTransform().getMat().getRow3(0)
-		xz.setY(0)
-		xz.normalize()
-		print(xz)
-		xy = base.camera.getNetTransform().getMat().getRow3(1)
-		xy.setZ(0)
-		xy.normalize()
-
-		base.camera.setPos(base.camera.getPos() + (xz * 10 * deltaX))
-
-		#print(x, y, z)
-		#self.center_x -= y
-		#self.center_y += x
-		#self.center_z += z
-		#base.camera.setPos(self.center_x, self.center_y, self.center_z)
-		#from pandac.PandaModules import Point3, Vec3
-		#base.camera.lookAt(Point3(self.center_x, self.center_y, self.center_z))
+		oldX = base.camera.getX()
+		oldY = base.camera.getY()
+		oldZ = base.camera.getZ()
+		base.camera.setPos(base.camera, -deltaX * 150, 0, -deltaY * 150)
+		self.center_x += base.camera.getX() - oldX
+		self.center_y += base.camera.getY() - oldY
+		self.center_z += base.camera.getZ() - oldZ
 
 	def spin_camera(self, task):
 		azimuth = task.time * 30
