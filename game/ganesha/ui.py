@@ -139,14 +139,17 @@ class Mouse(DirectObject):
 		self.drag_start = None
 		self.hovered_object = None
 		self.button2 = False
+		self.altButton2 = False
 		self.mouseTask = taskMgr.add(self.mouse_task, 'mouseTask')
 		self.task = None
 		self.accept('mouse1', self.mouse1)
 		self.accept('control-mouse1', self.mouse1)
 		self.accept('mouse1-up', self.mouse1_up)
-		self.accept('mouse2', self.rotateCamera)
+		self.accept('mouse2', self.startPan)
 		self.accept('mouse2-up', self.stopCamera)
 		self.accept('mouse3', self.rotateCamera)
+		self.accept('alt-mouse3', self.startPan)
+		self.accept('alt-up', self.endPan)
 		self.accept('mouse3-up', self.stopCamera)
 		self.accept('wheel_up', self.wheel_up)
 		self.accept('wheel_down', self.wheel_down)
@@ -201,6 +204,8 @@ class Mouse(DirectObject):
 			self.hovered_object = None
 		if self.button2:
 			self.camera_drag()
+		elif self.altButton2:
+			self.camera_pan()
 		hovered_node_path = self.find_object()
 		if hovered_node_path:
 			polygon = hovered_node_path.findNetTag('polygon_i')
@@ -229,6 +234,16 @@ class Mouse(DirectObject):
 		self.app.state.request('mouse1-up')
 		self.app.uv_edit_window.on_mouse1_up()
 
+	def camera_pan(self):
+		if self.delta:
+			self.app.world.set_camera_pos(self.delta.getX(), self.delta.getY())
+
+	def startPan(self):
+		self.altButton2 = True
+
+	def endPan(self):
+		self.altButton2 = False
+
 	def camera_drag(self):
 		if self.delta:
 			old_heading = base.camera.getH()
@@ -248,6 +263,7 @@ class Mouse(DirectObject):
 	def stopCamera(self):
 		self.button2 = False
 		self.app.state.request('mouse2-up')
+		self.endPan() #Also stops panning, since mouse3 can do both rotating and panning
 
 	def wheel_up(self):
 		if base.mouseWatcherNode.hasMouse():
@@ -3257,6 +3273,7 @@ class Map_Viewer(DirectObject):
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
+
 	def multi_select(self):
 		self.multiSelect = True
 	
