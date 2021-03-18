@@ -145,7 +145,7 @@ class Mouse(DirectObject):
 		self.accept('mouse1', self.mouse1)
 		self.accept('control-mouse1', self.mouse1)
 		self.accept('mouse1-up', self.mouse1_up)
-		self.accept('mouse2', self.rotateCamera)
+		self.accept('mouse2', self.startPan)
 		self.accept('mouse2-up', self.stopCamera)
 		self.accept('mouse3', self.rotateCamera)
 		self.accept('alt-mouse3', self.startPan)
