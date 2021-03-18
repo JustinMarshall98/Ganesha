@@ -2560,9 +2560,6 @@ class MultiTerrainEditWindow(wx.Frame):
 				tile.select()
 
 
-
-
-
 class PaletteEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
 		# Configure window
@@ -2577,6 +2574,7 @@ class PaletteEditWindow(wx.Frame):
 		# Color buttons grid for all 16 palettes
 		sizer_color_table = wx.FlexGridSizer(rows=17, cols=19)
 		self.color_buttons = []
+		self.alpha_checkbox = ''
 		
 		# Top row header
 		sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
@@ -2615,7 +2613,7 @@ class PaletteEditWindow(wx.Frame):
 		for i, color in enumerate(['R', 'G', 'B']):
 			sizer_slide_input = wx.BoxSizer(wx.HORIZONTAL)
 			max_value = 31
-			
+							
 			color_label = wx.StaticText(panel, wx.ID_ANY, color, size=wx.Size(20, -1))
 			sizer_slide_input.Add(color_label, 0)
 			
@@ -2636,6 +2634,12 @@ class PaletteEditWindow(wx.Frame):
 			self.color_sliders.append(color_slider)
 			self.color_inputs.append(color_input)
 			
+		self.alpha_checkbox = wx.CheckBox(panel, id = 5003, label="Is Transparent if (r,g,b) is (0,0,0)");
+		self.alpha_checkbox.Bind(wx.EVT_CHECKBOX,self.on_alpha_changed) 
+		self.alpha_checkbox.Disable()
+		
+		sizer_color_sliders.Add(self.alpha_checkbox)
+		 
 		sizer_sliders_preview.Add(sizer_color_sliders)
 		self.preview = wx.Window(panel, wx.ID_ANY, size=wx.Size(70, 70))
 		self.preview.SetBackgroundColour(wx.Colour(0, 0, 0))
@@ -2678,12 +2682,14 @@ class PaletteEditWindow(wx.Frame):
 				self.color_inputs[i].SetValue(str(value))
 				self.color_inputs[i].Update()
 
+		self.alpha_checkbox.SetValue(1 if color[3] == 0 else 0)
 		self.preview.SetBackgroundColour(clicked.GetBackgroundColour())
 		self.preview.Refresh()
 
 		self.FindWindowById(5000).Enable()
 		self.FindWindowById(5001).Enable()
 		self.FindWindowById(5002).Enable()
+		self.FindWindowById(5003).Enable()
 		self.FindWindowById(6000).Enable()
 		self.FindWindowById(6001).Enable()
 		self.FindWindowById(6002).Enable()
@@ -2700,18 +2706,28 @@ class PaletteEditWindow(wx.Frame):
 		color_input = self.color_inputs[color]
 		color_input.SetValue(str(position))
 		color_input.Update()
+
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
 			
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		a = 1
-		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		a = self.palettes[color_id / 16][color_id % 16][3]
 		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
 		self.set_button_color(self.active_button, r, g, b, a)
 		factor = 255.0 / 31.0
 		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
 		self.preview.Refresh()
 
+	def on_alpha_changed(self, event):
+		is_checked = event.GetEventObject().GetValue()
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		r = self.palettes[color_id / 16][color_id % 16][0]
+		g = self.palettes[color_id / 16][color_id % 16][1]
+		b = self.palettes[color_id / 16][color_id % 16][2]
+		a = 0 if is_checked else 1
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
+		
 	def on_color_enter(self, event):
 		try:
 			newInt = int(event.GetString())
@@ -2733,14 +2749,14 @@ class PaletteEditWindow(wx.Frame):
 		if not self.active_button:
 			return
 		#Update colour
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		#a = self.color_sliders[3].GetValue()
-		#Alpha slider has been removed
-		a = 0
-		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
-		self.palettes[color_id / 16][color_id % 16] = (r, g, b)
+		a = self.palettes[color_id / 16][color_id % 16][3]
+
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
 		self.set_button_color(self.active_button, r, g, b, a)
 		factor = 255.0 / 31.0
 		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
@@ -2857,7 +2873,7 @@ class PaletteEditWindow(wx.Frame):
 				r = hex_list[index]
 				g = hex_list[index + 1]
 				b = hex_list[index + 2]
-				a = 1
+				a = self.palettes[palette_id][color_id][3]
 				self.palettes[palette_id][color_id] = (r, g, b, a)
 				self.set_button_id_color(PALETTE_INPUT_ID + palette_id * 16 + color_id, r, g, b, a)
 			
@@ -2869,6 +2885,7 @@ class PaletteEditWindow(wx.Frame):
 		self.palettes = []
 		for y, palette in enumerate(palettes):
 			selfpalette = []
+
 			for x, color in enumerate(palette.colors.colors):
 				self.set_button_color(self.color_buttons[y*16 + x], *color)
 				selfpalette.append(color)
@@ -2878,7 +2895,6 @@ class PaletteEditWindow(wx.Frame):
 		for y, palette in enumerate(self.palettes):
 			for x, color in enumerate(palette):
 				self.app.world.color_palettes[y].colors.colors[x] = color
-
 
 class LightsEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
