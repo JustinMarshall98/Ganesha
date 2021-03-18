@@ -2632,9 +2632,9 @@ class MultiTerrainEditWindow(wx.Frame):
 				elif(tile.slope_height > 255):
 					tile.slope_height = 255
 					print("Terrain Warning: Depth can't be greater than 255.")
-			if self.inputs[(0, 'slope_type')].GetCurrentSelection():
+			if self.inputs[(0, 'slope_type')].GetCurrentSelection() != -1:
 				tile.slope_type = slope_types[self.inputs[(0, 'slope_type')].GetCurrentSelection()][0]
-			if self.inputs[(0, 'surface_type')].GetCurrentSelection():
+			if self.inputs[(0, 'surface_type')].GetCurrentSelection() != -1:
 				tile.surface_type = self.inputs[(0, 'surface_type')].GetCurrentSelection()
 
 			tile.cant_walk = 1 if self.inputs[(0, 'cant_walk')].GetValue() else 0
