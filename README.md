@@ -24,12 +24,23 @@ Gomtuu: Creating Ganesha and bringing it up to v0.60, creating all of the origin
 
 Twinees: Updating Ganesha to v0.72 and bringing it into TECHNICOLOR
 
-Garmichael: Created Import / Export function for Palettes (ACT format), contributed to v0.74 Update
+Garmichael: Contributed to v0.74 and v0.75 Update
 
 Jumza: Owner of the repo, updated Ganesha to v0.73 and beyond
    
 Changelog
 =========
+2021-03-18 - v0.75 - Jumza Update
+ - (Garmichael) Fixed an issue with importing palettes where Ganesha would only read part of the file
+ - (Garmichael) Changed palette editing window from having an Alpha slider to having a checkbox
+ - (Garmichael) You can no longer manipulate the sliders in the palette edit window with nothing selected
+ - Multi-Terrain Editing window is no longer able to edit Polygons, and should not result in more crashes
+ - Multi-Terrain Editing window is now able to properly apply Flat 0 and Natural Surface to multiple tiles at once
+ - Multi-Terrain Editing window will no longer set tiles to Convex NW when no slope type is selected
+ - Fixed a bug where using a hotkey with nothing selected would cause a crash
+ - (Garmichael) Added all polygons in map list to the Polygon edit window
+ - Camera panning has been added, use Alt-Right Click / Mouse-Wheel Click and drag
+
 2021-03-08 - v0.74 - Jumza Update
  - Fixed the Saving a [0,0] tile Map Bug and capped the max tile count at 256. Any side of the map must be between 1 and 255 tiles.
  - Fixed UV to be bound to values between [0,255] to prevent crashing
