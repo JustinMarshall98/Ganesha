@@ -2183,6 +2183,7 @@ class SettingsWindow(wx.Frame):
 		"d: Edit terrain dimensions\n\n" +
 		"f: Copy selected polygons\n\n" +
 		"u: Move all polygons\n\n" +
+		"Alt-Right Click / Mouse-Wheel Click + Drag: Pan Camera\n\n" +
 		"Tab: While multiple terrain tiles are selected, open multi-tile editing window\n\n" +
 		"CTRL + A: Select all Polygons / Tiles depending on view.\nCTRL + A repeatedly: In terrain view, cycle through multiple levels.\n\n" +
 		"Holding CTRL: Allows selection of multiple polygons\non which you can perform the following on:\n\n" +
