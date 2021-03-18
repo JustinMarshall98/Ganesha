@@ -373,7 +373,6 @@ class PolygonAddWindow(wx.Frame):
 		self.MakeModal(False)
 		self.Show(False)
 
-
 class PolygonEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
 		self.app = parent
@@ -385,6 +384,9 @@ class PolygonEditWindow(wx.Frame):
 		# Vertex point, normal, and UV coordinates
 		sizer_point_table = wx.FlexGridSizer(rows=13, cols=9)
 		self.inputs = {}
+		self.polygon_list = []
+		
+		# Dimensions Table
 		for i, point in enumerate(['', '', '', 'A', 'B', 'C', 'D', '', '']):
 			point_label = wx.StaticText(panel, wx.ID_ANY, point, size=wx.Size(20, -1))
 			if point == 'A':
@@ -812,12 +814,32 @@ class PolygonEditWindow(wx.Frame):
 		#sizer_sections.Add(self.inputs['unknown5'], flag=wx.ALL, border=10)
 		# Buttons
 		sizer_buttons = wx.BoxSizer(wx.HORIZONTAL)
+		
 		apply_button = wx.Button(panel, wx.ID_APPLY)
 		apply_button.Bind(wx.EVT_BUTTON, self.to_data)
 		sizer_buttons.Add(apply_button, flag=wx.RIGHT, border=20)
+		
 		delete_button = wx.Button(panel, wx.ID_DELETE)
 		delete_button.Bind(wx.EVT_BUTTON, self.on_delete)
 		sizer_buttons.Add(delete_button, flag=wx.RIGHT, border=20)
+		
+		# Polygon selector		
+		button = wx.Button(panel, wx.ID_ANY, '< Prev', size=wx.Size(50, -1))
+		button.Bind(wx.EVT_BUTTON, self.on_change_poly_previous)
+		self.inputs['previous_polygon_button'] = button
+		sizer_buttons.Add(button)
+				
+		combobox = wx.Choice(panel, id=wx.ID_ANY, size=wx.Size(100, -1), choices=[])
+		combobox.Bind(wx.EVT_CHOICE, self.on_change_poly_selection)
+		self.inputs['polygon_selector_box'] = combobox
+		sizer_buttons.Add(combobox)
+		
+		button = wx.Button(panel, wx.ID_ANY, 'Next >', size=wx.Size(50, -1))
+		self.inputs['next_polygon_button'] = button
+		button.Bind(wx.EVT_BUTTON, self.on_change_poly_next)
+		
+		sizer_buttons.Add(button)
+		
 		sizer_sections.Add(sizer_buttons, flag=wx.LEFT | wx.BOTTOM | wx.RIGHT, border=10)
 		panel.SetSizer(sizer_sections)
 		sizer_sections.SetSizeHints(panel)
@@ -1582,7 +1604,22 @@ class PolygonEditWindow(wx.Frame):
 				count += 1
 			self.to_data(None)
 
-	def from_data(self, polygon):
+	def on_change_poly_selection(self, event):
+		selected_poly_index = event.GetSelection();
+		selected_polygon = self.app.world.polygons[selected_poly_index]
+		self.app.select(selected_polygon)
+	
+	def on_change_poly_previous(self, event):
+		selected_poly_index = self.inputs['polygon_selector_box'].GetSelection()
+		selected_polygon = self.app.world.polygons[selected_poly_index - 1]
+		self.app.select(selected_polygon)
+		
+	def on_change_poly_next(self, event):
+		selected_poly_index = self.inputs['polygon_selector_box'].GetSelection()
+		selected_polygon = self.app.world.polygons[selected_poly_index + 1]
+		self.app.select(selected_polygon)
+		
+	def from_data(self, polygon):			
 		for dim in ['X', 'Y', 'Z']:
 			for pt in ['A', 'B', 'C', 'D']:
 				if not hasattr(polygon.source, pt):
@@ -1667,7 +1704,41 @@ class PolygonEditWindow(wx.Frame):
 			if bit is not None:
 				self.inputs[('visibility', bit)].SetValue(bool(polygon.source.visible_angles[bit]))
 		self.app.uv_edit_window.from_data()
-
+		
+		# Setting Polygon Selector Items
+		new_list = []
+		for index, poly in enumerate(self.app.world.polygons):
+			new_list.append('Polygon_' + str(index))
+			
+		if len(new_list) != len(self.polygon_list):
+			poly_difference = abs(len(new_list) - len(self.polygon_list))
+			if poly_difference < 100:
+				if len(new_list) > len(self.polygon_list):
+					for index in range(poly_difference):
+						self.inputs['polygon_selector_box'].Append('Polygon_' + str(len(self.polygon_list) + index))
+				else:
+					for index in range(poly_difference):
+						self.inputs['polygon_selector_box'].Delete(len(new_list))
+						
+				self.polygon_list = new_list
+			else:
+				self.polygon_list = new_list
+				self.inputs['polygon_selector_box'].Clear()
+				self.inputs['polygon_selector_box'].AppendItems(self.polygon_list)
+			
+		selected_poly_index = self.app.world.polygons.index(polygon)
+		self.inputs['polygon_selector_box'].SetSelection(selected_poly_index)
+		
+		if selected_poly_index == 0:
+			self.inputs['previous_polygon_button'].Disable()
+		else: 
+			self.inputs['previous_polygon_button'].Enable()
+			
+		if selected_poly_index == len(self.polygon_list) - 1:
+			self.inputs['next_polygon_button'].Disable()
+		else: 
+			self.inputs['next_polygon_button'].Enable()
+			
 	def to_data(self, foo):
 		for dim in ['X', 'Y', 'Z']:
 			for pt in ['A', 'B', 'C', 'D']:
@@ -2576,9 +2647,6 @@ class MultiTerrainEditWindow(wx.Frame):
 				tile.select()
 
 
-
-
-
 class PaletteEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
 		# Configure window
@@ -2593,6 +2661,7 @@ class PaletteEditWindow(wx.Frame):
 		# Color buttons grid for all 16 palettes
 		sizer_color_table = wx.FlexGridSizer(rows=17, cols=19)
 		self.color_buttons = []
+		self.alpha_checkbox = ''
 		
 		# Top row header
 		sizer_color_table.Add(wx.StaticText(panel, wx.ID_ANY, ''))
@@ -2631,7 +2700,7 @@ class PaletteEditWindow(wx.Frame):
 		for i, color in enumerate(['R', 'G', 'B']):
 			sizer_slide_input = wx.BoxSizer(wx.HORIZONTAL)
 			max_value = 31
-			
+							
 			color_label = wx.StaticText(panel, wx.ID_ANY, color, size=wx.Size(20, -1))
 			sizer_slide_input.Add(color_label, 0)
 			
@@ -2652,6 +2721,12 @@ class PaletteEditWindow(wx.Frame):
 			self.color_sliders.append(color_slider)
 			self.color_inputs.append(color_input)
 			
+		self.alpha_checkbox = wx.CheckBox(panel, id = 5003, label="Is Transparent if (r,g,b) is (0,0,0)");
+		self.alpha_checkbox.Bind(wx.EVT_CHECKBOX,self.on_alpha_changed) 
+		self.alpha_checkbox.Disable()
+		
+		sizer_color_sliders.Add(self.alpha_checkbox)
+		 
 		sizer_sliders_preview.Add(sizer_color_sliders)
 		self.preview = wx.Window(panel, wx.ID_ANY, size=wx.Size(70, 70))
 		self.preview.SetBackgroundColour(wx.Colour(0, 0, 0))
@@ -2694,12 +2769,14 @@ class PaletteEditWindow(wx.Frame):
 				self.color_inputs[i].SetValue(str(value))
 				self.color_inputs[i].Update()
 
+		self.alpha_checkbox.SetValue(1 if color[3] == 0 else 0)
 		self.preview.SetBackgroundColour(clicked.GetBackgroundColour())
 		self.preview.Refresh()
 
 		self.FindWindowById(5000).Enable()
 		self.FindWindowById(5001).Enable()
 		self.FindWindowById(5002).Enable()
+		self.FindWindowById(5003).Enable()
 		self.FindWindowById(6000).Enable()
 		self.FindWindowById(6001).Enable()
 		self.FindWindowById(6002).Enable()
@@ -2716,18 +2793,28 @@ class PaletteEditWindow(wx.Frame):
 		color_input = self.color_inputs[color]
 		color_input.SetValue(str(position))
 		color_input.Update()
+
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
 			
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		a = 1
-		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		a = self.palettes[color_id / 16][color_id % 16][3]
 		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
 		self.set_button_color(self.active_button, r, g, b, a)
 		factor = 255.0 / 31.0
 		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
 		self.preview.Refresh()
 
+	def on_alpha_changed(self, event):
+		is_checked = event.GetEventObject().GetValue()
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		r = self.palettes[color_id / 16][color_id % 16][0]
+		g = self.palettes[color_id / 16][color_id % 16][1]
+		b = self.palettes[color_id / 16][color_id % 16][2]
+		a = 0 if is_checked else 1
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
+		
 	def on_color_enter(self, event):
 		try:
 			newInt = int(event.GetString())
@@ -2749,14 +2836,14 @@ class PaletteEditWindow(wx.Frame):
 		if not self.active_button:
 			return
 		#Update colour
+		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
+		
 		r = self.color_sliders[0].GetValue()
 		g = self.color_sliders[1].GetValue()
 		b = self.color_sliders[2].GetValue()
-		#a = self.color_sliders[3].GetValue()
-		#Alpha slider has been removed
-		a = 0
-		color_id = self.active_button.GetId() - PALETTE_INPUT_ID
-		self.palettes[color_id / 16][color_id % 16] = (r, g, b)
+		a = self.palettes[color_id / 16][color_id % 16][3]
+
+		self.palettes[color_id / 16][color_id % 16] = (r, g, b, a)
 		self.set_button_color(self.active_button, r, g, b, a)
 		factor = 255.0 / 31.0
 		self.preview.SetBackgroundColour(wx.Colour(int(r * factor), int(g * factor), int(b * factor)))
@@ -2873,7 +2960,7 @@ class PaletteEditWindow(wx.Frame):
 				r = hex_list[index]
 				g = hex_list[index + 1]
 				b = hex_list[index + 2]
-				a = 1
+				a = self.palettes[palette_id][color_id][3]
 				self.palettes[palette_id][color_id] = (r, g, b, a)
 				self.set_button_id_color(PALETTE_INPUT_ID + palette_id * 16 + color_id, r, g, b, a)
 			
@@ -2885,6 +2972,7 @@ class PaletteEditWindow(wx.Frame):
 		self.palettes = []
 		for y, palette in enumerate(palettes):
 			selfpalette = []
+
 			for x, color in enumerate(palette.colors.colors):
 				self.set_button_color(self.color_buttons[y*16 + x], *color)
 				selfpalette.append(color)
@@ -2894,7 +2982,6 @@ class PaletteEditWindow(wx.Frame):
 		for y, palette in enumerate(self.palettes):
 			for x, color in enumerate(palette):
 				self.app.world.color_palettes[y].colors.colors[x] = color
-
 
 class LightsEditWindow(wx.Frame):
 	def __init__(self, parent, ID, title):
