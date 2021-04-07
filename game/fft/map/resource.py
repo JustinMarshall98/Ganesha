@@ -205,40 +205,52 @@ class Resources(object):
             offset += 2
 
     def get_tex_3gon_vis(self, toc_offset=0xb0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
-        offset = 0x380
-        for i in range(512):
-            vis_data = data[offset:offset+2]
-            yield vis_data
-            offset += 2
+        try:
+            resource = self.chunks[toc_offset / 4]
+            data = resource.chunks[toc_offset / 4]
+            offset = 0x380
+            for i in range(512):
+                vis_data = data[offset:offset+2]
+                yield vis_data
+                offset += 2
+        except:
+            print("Error in get_tex_3gon_vis")
 
     def get_tex_4gon_vis(self, toc_offset=0xb0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
-        offset = 0x380 + 512 * 2
-        for i in range(768):
-            vis_data = data[offset:offset+2]
-            yield vis_data
-            offset += 2
+        try:
+            resource = self.chunks[toc_offset / 4]
+            data = resource.chunks[toc_offset / 4]
+            offset = 0x380 + 512 * 2
+            for i in range(768):
+                vis_data = data[offset:offset+2]
+                yield vis_data
+                offset += 2
+        except:
+            print("Error in get_tex_4gon_vis")
 
     def get_untex_3gon_vis(self, toc_offset=0xb0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
-        offset = 0x380 + 512 * 2 + 768 * 2
-        for i in range(64):
-            vis_data = data[offset:offset+2]
-            yield vis_data
-            offset += 2
+        try:
+            resource = self.chunks[toc_offset / 4]
+            data = resource.chunks[toc_offset / 4]
+            offset = 0x380 + 512 * 2 + 768 * 2
+            for i in range(64):
+                vis_data = data[offset:offset+2]
+                yield vis_data
+                offset += 2
+        except:
+            print("Error in get_untex_3gon_vis")
 
     def get_untex_4gon_vis(self, toc_offset=0xb0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
-        offset = 0x380 + 512 * 2 + 768 * 2 + 64 * 2
-        for i in range(256):
-            vis_data = data[offset:offset+2]
-            yield vis_data
-            offset += 2
+        try:
+            resource = self.chunks[toc_offset / 4]
+            data = resource.chunks[toc_offset / 4]
+            offset = 0x380 + 512 * 2 + 768 * 2 + 64 * 2
+            for i in range(256):
+                vis_data = data[offset:offset+2]
+                yield vis_data
+                offset += 2
+        except:
+            print("Error in get_untex_4gon_vis")
 
     def get_color_palettes(self, toc_offset=0x44):
         resource = self.chunks[toc_offset / 4]
@@ -418,41 +430,44 @@ class Resources(object):
         resource.chunks[toc_offset / 4] = data[:offset] + terrain_data + data[offset + len(terrain_data):]
 
     def put_visible_angles(self, polygons, toc_offset=0xb0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
-        offset = 0x380
-        tex_tri = []
-        tex_quad = []
-        untex_tri = []
-        untex_quad = []
-        for polygon in polygons:
-            if hasattr(polygon.source, 'D') and polygon.source.A.normal:
-                tex_quad.append(polygon.source)
-            elif hasattr(polygon.source, 'D') and not polygon.source.A.normal:
-                untex_quad.append(polygon.source)
-            elif polygon.source.A.normal:
-                tex_tri.append(polygon.source)
-            else:
-                untex_tri.append(polygon.source)
-        tex_tri_data = ''
-        tex_quad_data = ''
-        untex_tri_data = ''
-        untex_quad_data = ''
-        for polygon in tex_tri:
-            vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
-            tex_tri_data += pack('<H', vis)
-        tex_tri_data += '\x00' * (1024 - len(tex_tri_data))
-        for polygon in tex_quad:
-            vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
-            tex_quad_data += pack('<H', vis)
-        tex_quad_data += '\x00' * (1536 - len(tex_quad_data))
-        for polygon in untex_tri:
-            vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
-            untex_tri_data += pack('<H', vis)
-        untex_tri_data += '\x00' * (128 - len(untex_tri_data))
-        for polygon in untex_quad:
-            vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
-            untex_quad_data += pack('<H', vis)
-        untex_quad_data += '\x00' * (512 - len(untex_quad_data))
-        visible_angles_data = tex_tri_data + tex_quad_data + untex_tri_data + untex_quad_data
-        resource.chunks[toc_offset / 4] = data[:offset] + visible_angles_data + data[offset + len(visible_angles_data):]
+        try:
+            resource = self.chunks[toc_offset / 4]
+            data = resource.chunks[toc_offset / 4]
+            offset = 0x380
+            tex_tri = []
+            tex_quad = []
+            untex_tri = []
+            untex_quad = []
+            for polygon in polygons:
+                if hasattr(polygon.source, 'D') and polygon.source.A.normal:
+                    tex_quad.append(polygon.source)
+                elif hasattr(polygon.source, 'D') and not polygon.source.A.normal:
+                    untex_quad.append(polygon.source)
+                elif polygon.source.A.normal:
+                    tex_tri.append(polygon.source)
+                else:
+                    untex_tri.append(polygon.source)
+            tex_tri_data = ''
+            tex_quad_data = ''
+            untex_tri_data = ''
+            untex_quad_data = ''
+            for polygon in tex_tri:
+                vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
+                tex_tri_data += pack('<H', vis)
+            tex_tri_data += '\x00' * (1024 - len(tex_tri_data))
+            for polygon in tex_quad:
+                vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
+                tex_quad_data += pack('<H', vis)
+            tex_quad_data += '\x00' * (1536 - len(tex_quad_data))
+            for polygon in untex_tri:
+                vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
+                untex_tri_data += pack('<H', vis)
+            untex_tri_data += '\x00' * (128 - len(untex_tri_data))
+            for polygon in untex_quad:
+                vis = sum([ x * 2**(15-i) for i, x in enumerate(polygon.visible_angles) ])
+                untex_quad_data += pack('<H', vis)
+            untex_quad_data += '\x00' * (512 - len(untex_quad_data))
+            visible_angles_data = tex_tri_data + tex_quad_data + untex_tri_data + untex_quad_data
+            resource.chunks[toc_offset / 4] = data[:offset] + visible_angles_data + data[offset + len(visible_angles_data):]
+        except:
+            print("put visible angles error")

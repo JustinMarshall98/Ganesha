@@ -5,13 +5,16 @@ class Texture(object):
         self.data = None
 
     def read(self, files):
-        for file_path in files:
-            self.file_path = file_path
-            self.file = open(self.file_path, 'rb')
-            self.data = self.file.read()
-            break
-        print 'tex', self.file_path
-        self.file.close()
+        try:
+            for file_path in files:
+                self.file_path = file_path
+                self.file = open(self.file_path, 'rb')
+                self.data = self.file.read()
+                break
+            print 'tex', self.file_path
+            self.file.close()
+        except:
+            print("Error in read")
 
     def write(self, data):
         self.file = open(self.file_path, 'wb')

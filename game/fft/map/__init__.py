@@ -290,16 +290,19 @@ class Texture(object):
         self.image = []
 
     def from_data(self, data):
-        for y in range(1024):
-            row = []
-            for x in range(128):
-                i = y * 128 + x
-                pair = unpack('B', data[i:i+1])[0]
-                pix1 = (pair >> 0) & 0xf
-                pix2 = (pair >> 4) & 0xf
-                row.append(pix1)
-                row.append(pix2)
-            self.image.append(row)
+        try:
+            for y in range(1024):
+                row = []
+                for x in range(128):
+                    i = y * 128 + x
+                    pair = unpack('B', data[i:i+1])[0]
+                    pix1 = (pair >> 0) & 0xf
+                    pix2 = (pair >> 4) & 0xf
+                    row.append(pix1)
+                    row.append(pix2)
+                self.image.append(row)
+        except:
+            print("error in from_data")
 
     def to_data(self, texture):
         texture_data = ''

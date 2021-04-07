@@ -614,34 +614,37 @@ class Texture(object):
 
 
 	def from_data(self, texture_data, palettes):
-		from pandac.PandaModules import PNMImage, VBase4D
-		from pandac.PandaModules import Texture as P3DTexture
-		
-		tex_pnm = PNMImage(17*256, 1024)
-		tex_pnm.addAlpha()
-
-		
-		testpnm = PNMImage(256, 1024)
-		
-		palette = [(x, x, x, 1) for x in range(16)]
-		colors = []
-		for color in palette:
-			color_list = [c / 15.0 for c in color[:3]]
-			color_list.append(0 if color == (0, 0, 0, 0) else 1)
-			colors.append(VBase4D(*color_list))
+		try:
+			from pandac.PandaModules import PNMImage, VBase4D
+			from pandac.PandaModules import Texture as P3DTexture
 			
-		for y in range(1024):
-			row = texture_data.image[y]
-			for x in range(256):
-				testpnm.setXelA(x, y, colors[row[x]])
-		
-		self.texture2 = P3DTexture()
-		self.texture2.load(testpnm)
-		self.texture2.setMagfilter(P3DTexture.FTNearest)
-		self.texture2.setMinfilter(P3DTexture.FTLinear)
-		
-		
-		self.update(tex_pnm, texture_data, palettes)
+			tex_pnm = PNMImage(17*256, 1024)
+			tex_pnm.addAlpha()
+
+			
+			testpnm = PNMImage(256, 1024)
+			
+			palette = [(x, x, x, 1) for x in range(16)]
+			colors = []
+			for color in palette:
+				color_list = [c / 15.0 for c in color[:3]]
+				color_list.append(0 if color == (0, 0, 0, 0) else 1)
+				colors.append(VBase4D(*color_list))
+				
+			for y in range(1024):
+				row = texture_data.image[y]
+				for x in range(256):
+					testpnm.setXelA(x, y, colors[row[x]])
+			
+			self.texture2 = P3DTexture()
+			self.texture2.load(testpnm)
+			self.texture2.setMagfilter(P3DTexture.FTNearest)
+			self.texture2.setMinfilter(P3DTexture.FTLinear)
+			
+			
+			self.update(tex_pnm, texture_data, palettes)
+		except:
+			print("from_data error")
 
 	def update(self, pnm, texture_data, palettes):
 		from pandac.PandaModules import PNMImage, VBase4D
@@ -913,10 +916,13 @@ class World(object):
 			self.node_path_mesh.clearLight(self.full_light.node_path)
 
 	def get_texture(self):
-		texture = Texture()
-		texture.from_data(self.map.get_texture(), self.color_palettes)
-		self.texture = texture
-		self.node_path_mesh.setTexture(self.texture.texture)
+		try:
+			texture = Texture()
+			texture.from_data(self.map.get_texture(), self.color_palettes)
+			self.texture = texture
+			self.node_path_mesh.setTexture(self.texture.texture)
+		except:
+			print("get_texture error")
 
 	def get_polygons(self):
 		polygons = []
