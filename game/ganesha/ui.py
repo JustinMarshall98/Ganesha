@@ -3358,9 +3358,31 @@ class Map_Viewer(DirectObject):
 		self.accept('control-a', self.select_all)
 		self.select_all_mode = 0
 		self.accept('tab', self.open_multi_terrain_editor)
+		self.accept('0', self.autoset_visibility_flags)
 		#base.messenger.toggleVerbose()
 
 	# TODO: move these functions somewhere after start (organize)
+
+	def autoset_visibility_flags(self):
+		if isinstance(self.selected_object, Polygon) or (len(self.selected_objects) > 0 and isinstance(self.selected_objects[0], Polygon)):
+			if not len(self.selected_objects) == 0:
+				for poly in self.selected_objects:
+					for bit, label in visibility_bits:
+						if bit is not None:
+							if bit == 0:
+								poly.source.visible_angles[bit] = 1
+							else:
+								poly.source.visible_angles[bit] = 0
+			elif self.selected_object:
+				for bit, label in visibility_bits:
+						if bit is not None:
+							if bit == 0:
+								self.selected_object.source.visible_angles[bit] = 1
+							else:
+								self.selected_object.source.visible_angles[bit] = 0
+			print "Visiblity flags for selected have been autoset"
+		else:
+			print "Unable to autoset visibility flags for selected"
 
 	def multi_select(self):
 		self.multiSelect = True
