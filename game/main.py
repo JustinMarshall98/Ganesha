@@ -24,7 +24,4 @@ except:
             map_viewer.showbase.destroy()
     import traceback
 
-    print()
-    print("ERROR:")
     traceback.print_exc()
-    input("Press Enter to continue.")
