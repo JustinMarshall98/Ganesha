@@ -4,17 +4,12 @@ class Texture(object):
         self.data = None
 
     def read(self, files):
-        """This currently only ever get a files len of 1 due to how Resource.read() and
-        Resource.get_texture_files() handles situations.
-
-        Asserting this for now until we fix on the other side.
-
-        """
-        assert len(files) == 1
-        self.file_path = files[0]
-
-        with open(self.file_path, "rb") as file:
-            self.data = file.read()
+        """TODO: This seems wrong to only get the first path and bail."""
+        for path in files:
+            self.file_path = path
+            with open(path, "rb") as file:
+                self.data = file.read()
+            break
 
     def write(self, data):
         with open(self.file_path, "wb") as file:

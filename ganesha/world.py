@@ -410,7 +410,7 @@ class Directional_Light(object):
     def __del__(self):
         self.parent.node_path_mesh.clearLight(self.node_path)
         self.node_path.remove_node()
-        self.node_path_line.remove()
+        self.node_path_line.remove_node()
 
     def from_data(self, light_data):
         self.color = light_data.color
@@ -431,7 +431,7 @@ class Directional_Light(object):
 
     def init_node_path_line(self, light_number):
         if self.node_path_line:
-            self.node_path_line.remove()
+            self.node_path_line.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
