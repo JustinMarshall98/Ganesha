@@ -2,8 +2,6 @@ import os
 import struct
 import sys
 
-import fft.map
-
 INDEX1_22 = 0x22
 INDEX1_30 = 0x30
 INDEX1_70 = 0x70

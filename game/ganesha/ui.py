@@ -1,12 +1,37 @@
 import math
+import os.path
 
 import wx
 from direct.fsm.FSM import FSM
 from direct.showbase.DirectObject import DirectObject
 from direct.showbase.ShowBase import ShowBase
-from pandac.PandaModules import CullFaceAttrib, WindowProperties
+from panda3d.core import (
+    ButtonThrower,
+    Camera,
+    CollisionHandlerQueue,
+    CollisionNode,
+    CollisionRay,
+    CollisionTraverser,
+    CullFaceAttrib,
+    FrameBufferProperties,
+    Geom,
+    GeomLinestrips,
+    GeomNode,
+    GeomTristrips,
+    GeomVertexData,
+    GeomVertexFormat,
+    GeomVertexWriter,
+    GraphicsPipe,
+    MouseAndKeyboard,
+    MouseWatcher,
+    NodePath,
+    OrthographicLens,
+    Point2,
+    TransparencyAttrib,
+    WindowProperties,
+)
 
-from ganesha import *
+from ganesha import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY, terrain_modes
 from .world import Polygon, Tile, World
 
 POLYGON_INPUT_ID = 1000
@@ -111,8 +136,6 @@ surface_types = {
 
 
 def vector_to_sphere(x, y, z):
-    import math
-
     radius = math.sqrt(x * x + y * y + z * z)
     if radius == 0:
         return (0, 0)
@@ -122,8 +145,6 @@ def vector_to_sphere(x, y, z):
 
 
 def sphere_to_vector(elevation, azimuth):
-    import math
-
     elevation = math.radians(elevation)
     azimuth = math.radians(azimuth)
     x = math.sin(elevation) * math.sin(azimuth)
@@ -158,14 +179,6 @@ class Mouse(DirectObject):
         self.accept("wheel_down", self.wheel_down)
 
     def init_collide(self):
-        from pandac.PandaModules import (
-            CollisionHandlerQueue,
-            CollisionNode,
-            CollisionRay,
-            CollisionTraverser,
-            GeomNode,
-        )
-
         self.cTrav = CollisionTraverser("MousePointer")
         self.cQueue = CollisionHandlerQueue()
         self.cNode = CollisionNode("MousePointer")
@@ -188,8 +201,6 @@ class Mouse(DirectObject):
         return None
 
     def mouse_task(self, task):
-        from pandac.PandaModules import Point2
-
         action = task.cont
         self.has_mouse = base.mouseWatcherNode.hasMouse()
         if self.has_mouse:
@@ -1914,14 +1925,6 @@ class UVEditWindow(DirectObject):
         self.mouse_old_pos = None
 
     def init_collide(self):
-        from pandac.PandaModules import (
-            CollisionHandlerQueue,
-            CollisionNode,
-            CollisionRay,
-            CollisionTraverser,
-            GeomNode,
-        )
-
         self.cTrav = CollisionTraverser("MousePointer")
         self.cQueue = CollisionHandlerQueue()
         self.cNode = CollisionNode("MousePointer")
@@ -1950,15 +1953,6 @@ class UVEditWindow(DirectObject):
     def open(self):
         if self.uv_window:
             return False
-        from pandac.PandaModules import (
-            ButtonThrower,
-            FrameBufferProperties,
-            GraphicsPipe,
-            MouseAndKeyboard,
-            MouseWatcher,
-            WindowProperties,
-        )
-
         fp = FrameBufferProperties.getDefault()
         wp = self.make_properties()
         self.uv_window = base.graphicsEngine.makeOutput(
@@ -1966,7 +1960,6 @@ class UVEditWindow(DirectObject):
         )
         self.uv_window.setCloseRequestEvent("uv_edit_window_closed")
         self.dr = self.uv_window.makeDisplayRegion()
-        from pandac.PandaModules import Camera, NodePath, OrthographicLens
 
         self.render_uv = NodePath("render_uv")
         self.camera = self.render_uv.attachNewNode(Camera("camera_uv"))
@@ -2086,15 +2079,6 @@ class UVEditWindow(DirectObject):
         self.close()
 
     def draw_texture(self):
-        from pandac.PandaModules import (
-            Geom,
-            GeomNode,
-            GeomTristrips,
-            GeomVertexData,
-            GeomVertexFormat,
-            GeomVertexWriter,
-        )
-
         if self.node_path_uv_polygon is not None:
             self.node_path_uv_polygon.removeNode()
         self.node_path_texture = self.render_uv.attachNewNode("node_path_texture")
@@ -2150,18 +2134,6 @@ class UVEditWindow(DirectObject):
             x = x + u
             y = y - v
             return (x, y, 1)
-
-        from pandac.PandaModules import (
-            Geom,
-            GeomLinestrips,
-            GeomNode,
-            GeomTristrips,
-            GeomVertexData,
-            GeomVertexFormat,
-            GeomVertexWriter,
-            NodePath,
-            TransparencyAttrib,
-        )
 
         if self.node_path_uv_polygon is not None:
             self.node_path_uv_polygon.removeNode()
@@ -3788,8 +3760,6 @@ class Map_Viewer(DirectObject):
         return None
 
     def output_texture(self):
-        import os.path
-
         dlg = wx.FileDialog(
             self.wx_win,
             "Output Texture to PNG",

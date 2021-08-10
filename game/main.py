@@ -7,7 +7,6 @@
 
 map_viewer = None
 try:
-    import os
     import sys
 
     from ganesha.ui import Map_Viewer

@@ -1,5 +1,11 @@
-from fft.map import GNS, Map
-from pandac.PandaModules import (
+import os
+from math import cos, pi, sin
+
+import fft.map
+from panda3d.core import (
+    AmbientLight,
+    DirectionalLight,
+    Filename,
     Geom,
     GeomLines,
     GeomNode,
@@ -7,11 +13,14 @@ from pandac.PandaModules import (
     GeomVertexData,
     GeomVertexFormat,
     GeomVertexWriter,
-    TransparencyAttrib,
-    VBase4,
+    OrthographicLens,
+    PNMImage,
+    Point3,
 )
+from panda3d.core import Texture as P3DTexture
+from panda3d.core import TransparencyAttrib, VBase4, VBase4D
 
-from ganesha import *
+from ganesha import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY
 
 
 def coords_to_panda(x, y, z):
@@ -382,7 +391,6 @@ class Ambient_Light(object):
         if self.node_path:
             self.parent.node_path_mesh.clearLight(self.node_path)
             self.node_path.remove()
-        from pandac.PandaModules import AmbientLight
 
         alight = AmbientLight("alight")
         alight.setColor(VBase4(*[x / 127.0 for x in self.color] + [1.0]))
@@ -413,7 +421,6 @@ class Directional_Light(object):
         if self.node_path:
             self.parent.node_path_mesh.clearLight(self.node_path)
             self.node_path.remove()
-        from pandac.PandaModules import DirectionalLight
 
         dlight = DirectionalLight("dlight")
         dlight.setColor(VBase4(*[x / 2048.0 for x in self.color] + [1.0]))
@@ -662,10 +669,6 @@ class Texture(object):
         self.texture2 = None
 
     def from_data(self, texture_data, palettes):
-        from pandac.PandaModules import PNMImage
-        from pandac.PandaModules import Texture as P3DTexture
-        from pandac.PandaModules import VBase4D
-
         tex_pnm = PNMImage(17 * 256, 1024)
         tex_pnm.addAlpha()
 
@@ -691,9 +694,6 @@ class Texture(object):
         self.update(tex_pnm, texture_data, palettes)
 
     def update(self, pnm, texture_data, palettes):
-        from pandac.PandaModules import PNMImage
-        from pandac.PandaModules import Texture as P3DTexture
-        from pandac.PandaModules import VBase4D
 
         self.palettes = []
         temp = []
@@ -729,7 +729,6 @@ class Texture(object):
 
     # function that saves data into files
     def to_data(self, texture):
-        from pandac.PandaModules import PNMImage
 
         tex_pnm = PNMImage()
         texture.texture2.store(tex_pnm)
@@ -744,18 +743,12 @@ class Texture(object):
         return image
 
     def export(self, file_name, texture_data):
-        from pandac.PandaModules import PNMImage
-        from pandac.PandaModules import Texture as P3DTexture
-        from pandac.PandaModules import VBase4D
 
         pnm = PNMImage(256, 1024)
         self.texture2.store(pnm)
         pnm.write(file_name)
 
     def import_(self, file_name, palettes):
-        from pandac.PandaModules import Filename, PNMImage
-        from pandac.PandaModules import Texture as P3DTexture
-        from pandac.PandaModules import VBase4D
 
         pnm = PNMImage()
         pnm.read(Filename.fromOsSpecific(file_name))
@@ -826,8 +819,6 @@ class Texture(object):
         self.texture.setMinfilter(P3DTexture.FTLinear)
 
     def make_blank(self):
-        from pandac.PandaModules import PNMImage
-        from pandac.PandaModules import Texture as P3DTexture
 
         tex_pnm = PNMImage(2, 2)
         tex_pnm.fill(1, 1, 1)
@@ -838,7 +829,7 @@ class Texture(object):
 class World(object):
     def __init__(self, parent):
         self.parent = parent
-        self.map = Map()
+        self.map = fft.map.Map()
         self.node_path = None
         self.textures = []
         self.polygons = None
@@ -892,7 +883,6 @@ class World(object):
         self.map.write()
 
     def init_camera(self, aspect_ratio=4.0 / 3.0):
-        from pandac.PandaModules import OrthographicLens
 
         lens = OrthographicLens()
         lens.setAspectRatio(aspect_ratio)
@@ -915,14 +905,11 @@ class World(object):
         base.cam.node().getLens().setFilmSize(self.map.hypotenuse)
 
     def set_camera_angle(self, azimuth, elevation):
-        from math import cos, pi, sin
-
         y = cos(pi * elevation / 180) * self.map.hypotenuse
         z = sin(pi * elevation / 180) * self.map.hypotenuse
         x = cos(pi * azimuth / 180) * y
         y = sin(pi * azimuth / 180) * y
         base.camera.setPos(self.center_x + x, self.center_y + y, self.center_z + z)
-        from pandac.PandaModules import Point3, Vec3
 
         base.camera.lookAt(Point3(self.center_x, self.center_y, self.center_z))
 
@@ -1030,13 +1017,11 @@ class World(object):
         if gns_path is None:
             gns_path = self.parent.file_dialog()
         assert gns_path is not None, "No GNS file chosen. Exiting."
-        self.map.gns = GNS()
+        self.map.gns = fft.map.GNS()
         self.map.gns.read(gns_path)
         self.map.set_situation(0)
 
     def next_gns(self):
-        import os
-
         gns_path = self.map.gns.file_path
         gns_dir = os.path.dirname(gns_path)
         gns_name = os.path.basename(gns_path)
@@ -1068,8 +1053,6 @@ class World(object):
         self.read()
 
     def add_polygon(self, sides, texture):
-        import fft.map
-
         polygon = Polygon(self)
         if sides == 3:
             polygon.source = fft.map.Triangle()
@@ -1123,10 +1106,6 @@ class World(object):
         self.polygons.append(polygon)
 
     def move_all_poly(self, dim, amount, sign):
-        from copy import deepcopy
-
-        import fft.map
-
         valueX = 0
         valueY = 0
         valueZ = 0
@@ -1190,8 +1169,6 @@ class World(object):
             polygon.node_path.setTag("polygon_i", str(polygon_id))
 
     def copy_polygon_to_XOffset(self, copyingPolygon, xOffset, texture):
-        import fft.map
-
         polygon = Polygon(self)
         sides = 3 if isinstance(copyingPolygon.source, fft.map.Triangle) else 4
         polygon.source = fft.map.Triangle() if sides == 3 else fft.map.Quad()
@@ -1311,10 +1288,6 @@ class World(object):
             # 	tile.select()
 
     def move_selected_poly(self, dim, amount, sign, selected):
-        from copy import deepcopy
-
-        import fft.map
-
         valueX = 0
         valueY = 0
         valueZ = 0
