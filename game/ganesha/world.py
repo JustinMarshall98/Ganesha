@@ -88,11 +88,11 @@ class Axes(object):
         self.init_node_path()
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
@@ -128,11 +128,11 @@ class Vertex(object):
         self.init_node_path()
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
@@ -185,11 +185,11 @@ class Vector(object):
         self.init_node_path()
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
@@ -244,7 +244,7 @@ class Polygon(object):
         self.nD = None
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def from_data(self, polygon):
         self.source = polygon
@@ -257,7 +257,7 @@ class Polygon(object):
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         polygon = self.source
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
@@ -381,7 +381,7 @@ class Ambient_Light(object):
 
     def __del__(self):
         self.parent.node_path_mesh.clearLight(self.node_path)
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def from_data(self, light_data):
         self.color = light_data.color
@@ -390,7 +390,7 @@ class Ambient_Light(object):
     def init_node_path(self):
         if self.node_path:
             self.parent.node_path_mesh.clearLight(self.node_path)
-            self.node_path.remove()
+            self.node_path.remove_node()
 
         alight = AmbientLight("alight")
         alight.setColor(VBase4(*[x / 127.0 for x in self.color] + [1.0]))
@@ -409,7 +409,7 @@ class Directional_Light(object):
 
     def __del__(self):
         self.parent.node_path_mesh.clearLight(self.node_path)
-        self.node_path.remove()
+        self.node_path.remove_node()
         self.node_path_line.remove()
 
     def from_data(self, light_data):
@@ -420,7 +420,7 @@ class Directional_Light(object):
     def init_node_path(self):
         if self.node_path:
             self.parent.node_path_mesh.clearLight(self.node_path)
-            self.node_path.remove()
+            self.node_path.remove_node()
 
         dlight = DirectionalLight("dlight")
         dlight.setColor(VBase4(*[x / 2048.0 for x in self.color] + [1.0]))
@@ -473,7 +473,7 @@ class Background(object):
         self.color2 = None
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def from_data(self, background_data):
         self.color1 = background_data.color1
@@ -482,7 +482,7 @@ class Background(object):
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
@@ -533,7 +533,7 @@ class Tile(object):
         self.is_selected = False
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def from_data(self, x, y, z, tile_data):
         self.x = x
@@ -555,7 +555,7 @@ class Tile(object):
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         vdata = GeomVertexData("name_me", self.format, Geom.UHStatic)
         vertex = GeomVertexWriter(vdata, "vertex")
         color = GeomVertexWriter(vdata, "color")
@@ -634,7 +634,7 @@ class Terrain(object):
         self.tiles = None
 
     def __del__(self):
-        self.node_path.remove()
+        self.node_path.remove_node()
 
     def from_data(self, terrain_data):
         self.tiles = []
@@ -654,7 +654,7 @@ class Terrain(object):
 
     def init_node_path(self):
         if self.node_path:
-            self.node_path.remove()
+            self.node_path.remove_node()
         node = GeomNode("gnode")
         self.node_path = self.parent.node_path_terrain.attachNewNode(node)
         for level in self.tiles:
