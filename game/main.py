@@ -21,10 +21,11 @@ try:
     map_viewer.start(gns_path)
 except:
     if map_viewer is not None:
-        if hasattr(map_viewer, 'showbase'):
+        if hasattr(map_viewer, "showbase"):
             map_viewer.showbase.destroy()
     import traceback
+
     print()
-    print('ERROR:')
+    print("ERROR:")
     traceback.print_exc()
-    input('Press Enter to continue.')
+    input("Press Enter to continue.")
