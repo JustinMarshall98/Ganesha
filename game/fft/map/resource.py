@@ -91,8 +91,8 @@ class Resources(object):
                 written.append(chunk.file_path)
 
     def get_tex_3gon_xyz(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = 8
         for i in range(tri_count):
@@ -101,8 +101,8 @@ class Resources(object):
             offset += 18
 
     def get_tex_4gon_xyz(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = 8 + tri_count * 18
         for i in range(quad_count):
@@ -111,8 +111,8 @@ class Resources(object):
             offset += 24
 
     def get_untex_3gon_xyz(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = 8 + tri_count * 18 + quad_count * 24
         for i in range(untri_count):
@@ -121,8 +121,8 @@ class Resources(object):
             offset += 18
 
     def get_untex_4gon_xyz(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = 8 + tri_count * 18 + quad_count * 24 + untri_count * 18
         for i in range(unquad_count):
@@ -131,8 +131,8 @@ class Resources(object):
             offset += 24
 
     def get_tex_3gon_norm(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8 + tri_count * 18 + quad_count * 24 + untri_count * 18 + unquad_count * 24
@@ -143,8 +143,8 @@ class Resources(object):
             offset += 18
 
     def get_tex_4gon_norm(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -160,8 +160,8 @@ class Resources(object):
             offset += 24
 
     def get_tex_3gon_uv(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -178,8 +178,8 @@ class Resources(object):
             offset += 10
 
     def get_tex_4gon_uv(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -197,8 +197,8 @@ class Resources(object):
             offset += 12
 
     def get_untex_3gon_unknown(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -217,8 +217,8 @@ class Resources(object):
             offset += 4
 
     def get_untex_4gon_unknown(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -238,8 +238,8 @@ class Resources(object):
             offset += 4
 
     def get_tex_3gon_terrain_coords(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -260,8 +260,8 @@ class Resources(object):
             offset += 2
 
     def get_tex_4gon_terrain_coords(self, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         (tri_count, quad_count, untri_count, unquad_count) = unpack("<4H", data[0:8])
         offset = (
             8
@@ -283,8 +283,8 @@ class Resources(object):
             offset += 2
 
     def get_tex_3gon_vis(self, toc_offset=0xB0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0x380
         for i in range(512):
             vis_data = data[offset : offset + 2]
@@ -292,8 +292,8 @@ class Resources(object):
             offset += 2
 
     def get_tex_4gon_vis(self, toc_offset=0xB0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0x380 + 512 * 2
         for i in range(768):
             vis_data = data[offset : offset + 2]
@@ -301,8 +301,8 @@ class Resources(object):
             offset += 2
 
     def get_untex_3gon_vis(self, toc_offset=0xB0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0x380 + 512 * 2 + 768 * 2
         for i in range(64):
             vis_data = data[offset : offset + 2]
@@ -310,8 +310,8 @@ class Resources(object):
             offset += 2
 
     def get_untex_4gon_vis(self, toc_offset=0xB0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0x380 + 512 * 2 + 768 * 2 + 64 * 2
         for i in range(256):
             vis_data = data[offset : offset + 2]
@@ -319,16 +319,16 @@ class Resources(object):
             offset += 2
 
     def get_color_palettes(self, toc_offset=0x44):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         for i in range(16):
             yield data[offset : offset + 32]
             offset += 32
 
     def get_dir_light_rgb(self, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         for i in range(3):
             yield data[offset : offset + 2] + data[offset + 6 : offset + 8] + data[
@@ -337,42 +337,42 @@ class Resources(object):
             offset += 2
 
     def get_dir_light_norm(self, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 18
         for i in range(3):
             yield data[offset : offset + 6]
             offset += 6
 
     def get_amb_light_rgb(self, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 36
         return data[offset : offset + 3]
 
     def get_background(self, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 39
         return data[offset : offset + 6]
 
     def get_terrain(self, toc_offset=0x68):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         return data
 
     def get_gray_palettes(self, toc_offset=0x7C):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         for i in range(16):
             yield data[offset : offset + 32]
             offset += 32
 
     def put_polygons(self, polygons, toc_offset=0x40):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         tex_tri = []
         tex_quad = []
@@ -451,11 +451,11 @@ class Resources(object):
         for polygon in tex_quad:
             val1 = (polygon.terrain_coords[1] << 1) + polygon.terrain_coords[2]
             polygons_data += pack("BB", val1, polygon.terrain_coords[0])
-        resource.chunks[toc_offset / 4] = polygons_data
+        resource.chunks[toc_offset // 4] = polygons_data
 
     def put_palettes(self, palettes, toc_offset=0x44):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         palette_data = ""
         for palette in palettes:
@@ -466,11 +466,11 @@ class Resources(object):
                 value += g << 5
                 value += r << 0
                 palette_data += pack("<H", value)
-        resource.chunks[toc_offset / 4] = palette_data
+        resource.chunks[toc_offset // 4] = palette_data
 
     def put_dir_lights(self, dir_lights, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
         light_data = ""
         for color in range(3):
@@ -479,37 +479,37 @@ class Resources(object):
         for light in dir_lights:
             for dim in range(3):
                 light_data += pack("<h", int(4096.0 * light.direction.coords[dim]))
-        resource.chunks[toc_offset / 4] = (
+        resource.chunks[toc_offset // 4] = (
             data[:offset] + light_data + data[offset + 36 :]
         )
 
     def put_amb_light_rgb(self, light_data, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 36
-        resource.chunks[toc_offset / 4] = (
+        resource.chunks[toc_offset // 4] = (
             data[:offset] + light_data + data[offset + 3 :]
         )
 
     def put_background(self, background_data, toc_offset=0x64):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 39
-        resource.chunks[toc_offset / 4] = (
+        resource.chunks[toc_offset // 4] = (
             data[:offset] + background_data + data[offset + 6 :]
         )
 
     def put_terrain(self, terrain_data, toc_offset=0x68):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0
-        resource.chunks[toc_offset / 4] = (
+        resource.chunks[toc_offset // 4] = (
             data[:offset] + terrain_data + data[offset + len(terrain_data) :]
         )
 
     def put_visible_angles(self, polygons, toc_offset=0xB0):
-        resource = self.chunks[toc_offset / 4]
-        data = resource.chunks[toc_offset / 4]
+        resource = self.chunks[toc_offset // 4]
+        data = resource.chunks[toc_offset // 4]
         offset = 0x380
         tex_tri = []
         tex_quad = []
@@ -547,7 +547,7 @@ class Resources(object):
         visible_angles_data = (
             tex_tri_data + tex_quad_data + untex_tri_data + untex_quad_data
         )
-        resource.chunks[toc_offset / 4] = (
+        resource.chunks[toc_offset // 4] = (
             data[:offset]
             + visible_angles_data
             + data[offset + len(visible_angles_data) :]
