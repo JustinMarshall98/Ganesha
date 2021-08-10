@@ -1,27 +1,22 @@
-#!/usr/bin/python
-# coding: utf-8
+#!/usr/bin/env python3
 
-# Ganesha
-# a Final Fantasy Tactics Map Editor
-# Don Laursen, 2009
+import sys
+import os
+from ganesha.ui import Map_Viewer
 
-map_viewer = None
-try:
-    import sys
 
-    from ganesha.ui import Map_Viewer
-
-    try:
-        gns_path = sys.argv[1]
-    except IndexError:
-        gns_path = None
+def main():
+    map_path = None
+    if len(sys.argv) > 1:
+        map_path = sys.argv[1]
+        _, ext = os.path.splitext(map_path)
+        if ext.lower() != ".gns":
+            print("File type must be GSN")
+            sys.exit()
 
     map_viewer = Map_Viewer()
-    map_viewer.start(gns_path)
-except:
-    if map_viewer is not None:
-        if hasattr(map_viewer, "showbase"):
-            map_viewer.showbase.destroy()
-    import traceback
+    map_viewer.start(map_path)
 
-    traceback.print_exc()
+
+if __name__ == "__main__":
+    main()
