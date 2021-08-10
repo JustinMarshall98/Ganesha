@@ -18,7 +18,7 @@ from panda3d.core import (
     Point3,
 )
 from panda3d.core import Texture as P3DTexture
-from panda3d.core import TransparencyAttrib, VBase4, VBase4D
+from panda3d.core import TransparencyAttrib, VBase4, VBase4F
 
 from ganesha import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY
 
@@ -679,7 +679,7 @@ class Texture(object):
         for color in palette:
             color_list = [c / 15.0 for c in color[:3]]
             color_list.append(0 if color == (0, 0, 0, 0) else 1)
-            colors.append(VBase4D(*color_list))
+            colors.append(VBase4F(*color_list))
 
         for y in range(1024):
             row = texture_data.image[y]
@@ -714,7 +714,7 @@ class Texture(object):
             for color in palette:
                 color_list = [c / 15.0 for c in color[:3]]
                 color_list.append(0 if color == (0, 0, 0, 0) else 1)
-                colors.append(VBase4D(*color_list))
+                colors.append(VBase4F(*color_list))
 
             for y in range(1024):
                 row = texture_data.image[y]
@@ -774,7 +774,7 @@ class Texture(object):
         for color in palette:
             color_list = [c / 15.0 for c in color[:3]]
             color_list.append(0 if color == (0, 0, 0, 0) else 1)
-            colors.append(VBase4D(*color_list))
+            colors.append(VBase4F(*color_list))
 
         for y in range(1024):
             row = texdata[y]
@@ -806,7 +806,7 @@ class Texture(object):
             for color in palette:
                 color_list = [c / 15.0 for c in color[:3]]
                 color_list.append(0 if color == (0, 0, 0, 0) else 1)
-                colors.append(VBase4D(*color_list))
+                colors.append(VBase4F(*color_list))
 
             for y in range(1024):
                 row = texdata[y]

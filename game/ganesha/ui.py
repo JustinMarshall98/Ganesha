@@ -407,7 +407,7 @@ class PolygonEditWindow(wx.Frame):
         panel = wx.Panel(self, wx.ID_ANY)
         sizer_sections = wx.BoxSizer(wx.VERTICAL)
         # Vertex point, normal, and UV coordinates
-        sizer_point_table = wx.FlexGridSizer(rows=13, cols=9)
+        sizer_point_table = wx.FlexGridSizer(rows=14, cols=9, vgap=0, hgap=0)
         self.inputs = {}
         self.polygon_list = []
 
@@ -841,7 +841,7 @@ class PolygonEditWindow(wx.Frame):
 
         # Texture page, palette | Terrain X, Z
         texture_terrain_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        page_palette_sizer = wx.FlexGridSizer(rows=2, cols=2)
+        page_palette_sizer = wx.FlexGridSizer(rows=2, cols=2, vgap=0, hgap=0)
         input_id += 1
         label = wx.StaticText(panel, wx.ID_ANY, "Tex. Page:")
         data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
@@ -855,7 +855,7 @@ class PolygonEditWindow(wx.Frame):
         page_palette_sizer.Add(data_input)
         self.inputs["palette"] = data_input
         texture_terrain_sizer.Add(page_palette_sizer)
-        terrain_x_z_sizer = wx.FlexGridSizer(rows=3, cols=2)
+        terrain_x_z_sizer = wx.FlexGridSizer(rows=3, cols=2, vgap=0, hgap=0)
         input_id += 1
         label = wx.StaticText(panel, wx.ID_ANY, "Terrain X:")
         data_input = wx.TextCtrl(panel, input_id, size=wx.Size(60, -1))
@@ -882,7 +882,7 @@ class PolygonEditWindow(wx.Frame):
         # Visibility Angles
         label = wx.StaticText(panel, wx.ID_ANY, "Invisible from:")
         sizer_sections.Add(label, flag=wx.LEFT | wx.RIGHT, border=10)
-        sizer_angles = wx.FlexGridSizer(rows=4, cols=8)
+        sizer_angles = wx.FlexGridSizer(rows=5, cols=8, vgap=0, hgap=0)
         for bit, label in visibility_bits:
             if bit is not None:
                 input_ = wx.CheckBox(panel, VISIBILITY_INPUT_ID + bit)
@@ -921,7 +921,7 @@ class PolygonEditWindow(wx.Frame):
         self.inputs["previous_polygon_button"] = button
         sizer_buttons.Add(button)
 
-        combobox = wx.Choice(panel, id=wx.ID_ANY, size=wx.Size(100, -1), choices=[])
+        combobox = wx.Choice(panel, id=wx.ID_ANY, size=wx.Size(150, -1), choices=[])
         combobox.Bind(wx.EVT_CHOICE, self.on_change_poly_selection)
         self.inputs["polygon_selector_box"] = combobox
         sizer_buttons.Add(combobox)
@@ -2489,7 +2489,7 @@ class TerrainEditWindow(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         panel = wx.Panel(self, wx.ID_ANY)
         sizer_sections = wx.BoxSizer(wx.VERTICAL)
-        sizer_main_table = wx.FlexGridSizer(rows=8, cols=3)
+        sizer_main_table = wx.FlexGridSizer(rows=10, cols=3, vgap=0, hgap=0)
         self.inputs = {}
         # Headings
         label = wx.StaticText(panel, wx.ID_ANY, "")
@@ -2684,7 +2684,7 @@ class MultiTerrainEditWindow(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_close)
         panel = wx.Panel(self, wx.ID_ANY)
         sizer_sections = wx.BoxSizer(wx.VERTICAL)
-        sizer_main_table = wx.FlexGridSizer(rows=8, cols=2)
+        sizer_main_table = wx.FlexGridSizer(rows=8, cols=2, vgap=0, hgap=0)
         self.inputs = {}
         # Heading
         label = wx.StaticText(panel, wx.ID_ANY, "")
@@ -2813,7 +2813,7 @@ class PaletteEditWindow(wx.Frame):
         sizer_sections = wx.BoxSizer(wx.VERTICAL)
 
         # Color buttons grid for all 16 palettes
-        sizer_color_table = wx.FlexGridSizer(rows=17, cols=19)
+        sizer_color_table = wx.FlexGridSizer(rows=17, cols=19, vgap=0, hgap=0)
         self.color_buttons = []
         self.alpha_checkbox = ""
 
@@ -3192,7 +3192,7 @@ class LightsEditWindow(wx.Frame):
         for i in range(3):
             label_light = wx.StaticText(panel, wx.ID_ANY, "Directional Light %u" % i)
             sizer_sections.Add(label_light)
-            sizer_light = wx.FlexGridSizer(rows=3, cols=3)
+            sizer_light = wx.FlexGridSizer(rows=3, cols=3, vgap=0, hgap=0)
             color_label = wx.StaticText(panel, wx.ID_ANY, "Color")
             color = wx.Window(panel, 7000 + i, size=wx.Size(60, 20))
             color.SetBackgroundColour(wx.Colour(0, 0, 0))
@@ -3231,7 +3231,7 @@ class LightsEditWindow(wx.Frame):
         # Ambient light
         label_light = wx.StaticText(panel, wx.ID_ANY, "Ambient Light")
         sizer_sections.Add(label_light)
-        sizer_light = wx.FlexGridSizer(rows=1, cols=2)
+        sizer_light = wx.FlexGridSizer(rows=1, cols=2, vgap=0, hgap=0)
         color_label = wx.StaticText(panel, wx.ID_ANY, "Color")
         i += 1
         color = wx.Window(panel, 7000 + i, size=wx.Size(60, 20))
@@ -3244,7 +3244,7 @@ class LightsEditWindow(wx.Frame):
         # Background
         label_background = wx.StaticText(panel, wx.ID_ANY, "Background Colors")
         sizer_sections.Add(label_background)
-        sizer_background = wx.FlexGridSizer(rows=2, cols=2)
+        sizer_background = wx.FlexGridSizer(rows=2, cols=2, vgap=0, hgap=0)
         color_label = wx.StaticText(panel, wx.ID_ANY, "Color 0")
         i += 1
         color = wx.Window(panel, 7000 + i, size=wx.Size(60, 20))
@@ -3698,8 +3698,8 @@ class Map_Viewer(DirectObject):
     def start(self, gns_path):
         self.wx_app = wx.App(0)
         self.wx_win = wx.Frame(None, -1, "Ganesha wxWindow", wx.DefaultPosition)
-        self.wx_event_loop = wx.EventLoop()
-        wx.EventLoop.SetActive(self.wx_event_loop)
+        self.wx_event_loop = wx.GUIEventLoop()
+        wx.GUIEventLoop.SetActive(self.wx_event_loop)
         self.polygon_add_window = PolygonAddWindow(self, -1, "Add Polygon")
         self.polygon_edit_window = PolygonEditWindow(self, -1, "Edit Polygon")
         self.uv_edit_window = UVEditWindow(self)
@@ -3725,12 +3725,12 @@ class Map_Viewer(DirectObject):
         self.world.set_terrain_alpha(self.terrain_mode)
         self.set_full_light(self.full_light_enabled)
         self.settings_window = SettingsWindow(self, -1, "Settings Window")
-        run()
+        self.showbase.run()
 
     def handle_wx_events(self, task):
         while self.wx_event_loop.Pending():
             self.wx_event_loop.Dispatch()
-        self.wx_app.ProcessIdle()
+        self.wx_event_loop.ProcessIdle()
         return task.cont
 
     def on_window_event(self, window):
