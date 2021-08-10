@@ -1,6 +1,18 @@
-from pandac.PandaModules import GeomVertexFormat, GeomVertexData, GeomVertexWriter, Geom, GeomTristrips, GeomLines, GeomNode, VBase4, TransparencyAttrib
-from fft.map import Map, GNS
+from fft.map import GNS, Map
+from pandac.PandaModules import (
+    Geom,
+    GeomLines,
+    GeomNode,
+    GeomTristrips,
+    GeomVertexData,
+    GeomVertexFormat,
+    GeomVertexWriter,
+    TransparencyAttrib,
+    VBase4,
+)
+
 from ganesha import *
+
 
 def coords_to_panda(x, y, z):
 	return (x, z, -y)
@@ -614,8 +626,9 @@ class Texture(object):
 
 
 	def from_data(self, texture_data, palettes):
-		from pandac.PandaModules import PNMImage, VBase4D
+		from pandac.PandaModules import PNMImage
 		from pandac.PandaModules import Texture as P3DTexture
+		from pandac.PandaModules import VBase4D
 		
 		tex_pnm = PNMImage(17*256, 1024)
 		tex_pnm.addAlpha()
@@ -644,8 +657,9 @@ class Texture(object):
 		self.update(tex_pnm, texture_data, palettes)
 
 	def update(self, pnm, texture_data, palettes):
-		from pandac.PandaModules import PNMImage, VBase4D
+		from pandac.PandaModules import PNMImage
 		from pandac.PandaModules import Texture as P3DTexture
+		from pandac.PandaModules import VBase4D
 		
 		self.palettes = []
 		temp = []
@@ -695,8 +709,9 @@ class Texture(object):
 		return image
 
 	def export(self, file_name, texture_data):
-		from pandac.PandaModules import PNMImage, VBase4D
+		from pandac.PandaModules import PNMImage
 		from pandac.PandaModules import Texture as P3DTexture
+		from pandac.PandaModules import VBase4D
 
 		pnm = PNMImage(256, 1024)
 		self.texture2.store(pnm)
@@ -704,8 +719,9 @@ class Texture(object):
 
 
 	def import_(self, file_name, palettes):
-		from pandac.PandaModules import PNMImage, Filename, VBase4D
+		from pandac.PandaModules import Filename, PNMImage
 		from pandac.PandaModules import Texture as P3DTexture
+		from pandac.PandaModules import VBase4D
 		
 		pnm = PNMImage()
 		pnm.read(Filename.fromOsSpecific(file_name))
@@ -865,7 +881,7 @@ class World(object):
 		base.cam.node().getLens().setFilmSize(self.map.hypotenuse)
 
 	def set_camera_angle(self, azimuth, elevation):
-		from math import sin, cos, pi
+		from math import cos, pi, sin
 		
 		y = cos(pi * elevation / 180) * self.map.hypotenuse
 		z = sin(pi * elevation / 180) * self.map.hypotenuse
@@ -1071,8 +1087,9 @@ class World(object):
 
 
 	def move_all_poly(self, dim, amount, sign):
-		import fft.map
 		from copy import deepcopy
+
+		import fft.map
 		
 		valueX = 0
 		valueY = 0
@@ -1199,8 +1216,9 @@ class World(object):
 			#	tile.select()
 
 	def move_selected_poly(self, dim, amount, sign, selected):
-		import fft.map
 		from copy import deepcopy
+
+		import fft.map
 		
 		valueX = 0
 		valueY = 0

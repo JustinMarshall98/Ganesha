@@ -1,7 +1,7 @@
+from datetime import datetime
+from math import ceil
 from os.path import getsize
 from struct import pack, unpack
-from math import ceil
-from datetime import datetime
 
 
 class Resource(object):

@@ -1,14 +1,13 @@
-# Initialize window:
-from pandac.PandaModules import WindowProperties
-from direct.showbase.ShowBase import ShowBase
-# Normal imports:
-from pandac.PandaModules import CullFaceAttrib
-from direct.showbase.DirectObject import DirectObject
-from direct.fsm.FSM import FSM
-import wx
 import math
-from .world import World, Polygon, Tile
+
+import wx
+from direct.fsm.FSM import FSM
+from direct.showbase.DirectObject import DirectObject
+from direct.showbase.ShowBase import ShowBase
+from pandac.PandaModules import CullFaceAttrib, WindowProperties
+
 from ganesha import *
+from .world import Polygon, Tile, World
 
 POLYGON_INPUT_ID = 1000
 POLYGON_MOVE_ID = 1500
@@ -155,8 +154,13 @@ class Mouse(DirectObject):
 		self.accept('wheel_down', self.wheel_down)
 
 	def init_collide(self):
-		from pandac.PandaModules import CollisionTraverser, CollisionNode, GeomNode
-		from pandac.PandaModules import CollisionHandlerQueue, CollisionRay
+		from pandac.PandaModules import (
+		    CollisionHandlerQueue,
+		    CollisionNode,
+		    CollisionRay,
+		    CollisionTraverser,
+		    GeomNode,
+		)
 		self.cTrav = CollisionTraverser('MousePointer')
 		self.cQueue = CollisionHandlerQueue()
 		self.cNode = CollisionNode('MousePointer')
@@ -1816,8 +1820,13 @@ class UVEditWindow(DirectObject):
 		self.mouse_old_pos = None
 
 	def init_collide(self):
-		from pandac.PandaModules import CollisionTraverser, CollisionNode, GeomNode
-		from pandac.PandaModules import CollisionHandlerQueue, CollisionRay
+		from pandac.PandaModules import (
+		    CollisionHandlerQueue,
+		    CollisionNode,
+		    CollisionRay,
+		    CollisionTraverser,
+		    GeomNode,
+		)
 		self.cTrav = CollisionTraverser('MousePointer')
 		self.cQueue = CollisionHandlerQueue()
 		self.cNode = CollisionNode('MousePointer')
@@ -1846,13 +1855,20 @@ class UVEditWindow(DirectObject):
 	def open(self):
 		if self.uv_window:
 			return False
-		from pandac.PandaModules import GraphicsPipe, FrameBufferProperties, WindowProperties, MouseAndKeyboard, MouseWatcher, ButtonThrower
+		from pandac.PandaModules import (
+		    ButtonThrower,
+		    FrameBufferProperties,
+		    GraphicsPipe,
+		    MouseAndKeyboard,
+		    MouseWatcher,
+		    WindowProperties,
+		)
 		fp = FrameBufferProperties.getDefault()
 		wp = self.make_properties()
 		self.uv_window = base.graphicsEngine.makeOutput(base.pipe, 'UV Coordinates', 2, fp, wp, GraphicsPipe.BFRequireWindow)
 		self.uv_window.setCloseRequestEvent('uv_edit_window_closed')
 		self.dr = self.uv_window.makeDisplayRegion()
-		from pandac.PandaModules import NodePath, Camera, OrthographicLens
+		from pandac.PandaModules import Camera, NodePath, OrthographicLens
 		self.render_uv = NodePath('render_uv')
 		self.camera = self.render_uv.attachNewNode(Camera('camera_uv'))
 		self.dr.setCamera(self.camera)
@@ -1969,7 +1985,14 @@ class UVEditWindow(DirectObject):
 		self.close()
 
 	def draw_texture(self):
-		from pandac.PandaModules import Geom, GeomVertexFormat, GeomVertexData, GeomVertexWriter, GeomTristrips, GeomNode
+		from pandac.PandaModules import (
+		    Geom,
+		    GeomNode,
+		    GeomTristrips,
+		    GeomVertexData,
+		    GeomVertexFormat,
+		    GeomVertexWriter,
+		)
 		if self.node_path_uv_polygon is not None:
 			self.node_path_uv_polygon.removeNode()
 		self.node_path_texture = self.render_uv.attachNewNode('node_path_texture')
@@ -2023,7 +2046,17 @@ class UVEditWindow(DirectObject):
 			x = x + u
 			y = y - v
 			return (x, y, 1)
-		from pandac.PandaModules import NodePath, Geom, GeomVertexFormat, GeomVertexData, GeomVertexWriter, GeomLinestrips, GeomNode, GeomTristrips, TransparencyAttrib
+		from pandac.PandaModules import (
+		    Geom,
+		    GeomLinestrips,
+		    GeomNode,
+		    GeomTristrips,
+		    GeomVertexData,
+		    GeomVertexFormat,
+		    GeomVertexWriter,
+		    NodePath,
+		    TransparencyAttrib,
+		)
 		if self.node_path_uv_polygon is not None:
 			self.node_path_uv_polygon.removeNode()
 		self.node_path_uv_polygon = self.render_uv.attachNewNode('node_path_uv_polygon')

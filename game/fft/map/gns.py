@@ -1,4 +1,7 @@
-import os, sys, struct
+import os
+import struct
+import sys
+
 import fft.map
 
 INDEX1_22 = 0x22
