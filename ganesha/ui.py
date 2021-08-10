@@ -31,8 +31,14 @@ from panda3d.core import (
     WindowProperties,
 )
 
-from ganesha import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY, terrain_modes
-from .world import Polygon, Tile, World
+from ganesha.constants import (
+    MESH_ONLY,
+    MOSTLY_MESH,
+    MOSTLY_TERRAIN,
+    TERRAIN_ONLY,
+    terrain_modes,
+)
+from ganesha.world import Polygon, Tile, World
 
 POLYGON_INPUT_ID = 1000
 POLYGON_MOVE_ID = 1500

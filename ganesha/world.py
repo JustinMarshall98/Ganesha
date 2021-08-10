@@ -1,7 +1,6 @@
 import os
 from math import cos, pi, sin
 
-import fft.map
 from panda3d.core import (
     AmbientLight,
     DirectionalLight,
@@ -20,7 +19,8 @@ from panda3d.core import (
 from panda3d.core import Texture as P3DTexture
 from panda3d.core import TransparencyAttrib, VBase4, VBase4F
 
-from ganesha import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY
+from ganesha import fftmap
+from ganesha.constants import MESH_ONLY, MOSTLY_MESH, MOSTLY_TERRAIN, TERRAIN_ONLY
 
 
 def coords_to_panda(x, y, z):
@@ -829,7 +829,7 @@ class Texture(object):
 class World(object):
     def __init__(self, parent):
         self.parent = parent
-        self.map = fft.map.Map()
+        self.map = fftmap.Map()
         self.node_path = None
         self.textures = []
         self.polygons = None
@@ -1017,7 +1017,7 @@ class World(object):
         if gns_path is None:
             gns_path = self.parent.file_dialog()
         assert gns_path is not None, "No GNS file chosen. Exiting."
-        self.map.gns = fft.map.GNS()
+        self.map.gns = fftmap.GNS()
         self.map.gns.read(gns_path)
         self.map.set_situation(0)
 
@@ -1055,40 +1055,40 @@ class World(object):
     def add_polygon(self, sides, texture):
         polygon = Polygon(self)
         if sides == 3:
-            polygon.source = fft.map.Triangle()
+            polygon.source = fftmap.Triangle()
         else:
-            polygon.source = fft.map.Quad()
+            polygon.source = fftmap.Quad()
         y = self.map.extents[0][1] - 12
-        polygon.source.A = fft.map.Vertex()
-        polygon.source.A.point = fft.map.PointXYZ()
+        polygon.source.A = fftmap.Vertex()
+        polygon.source.A.point = fftmap.PointXYZ()
         polygon.source.A.point.set_coords(0, y, 28)
-        polygon.source.B = fft.map.Vertex()
-        polygon.source.B.point = fft.map.PointXYZ()
+        polygon.source.B = fftmap.Vertex()
+        polygon.source.B.point = fftmap.PointXYZ()
         polygon.source.B.point.set_coords(28, y, 28)
-        polygon.source.C = fft.map.Vertex()
-        polygon.source.C.point = fft.map.PointXYZ()
+        polygon.source.C = fftmap.Vertex()
+        polygon.source.C.point = fftmap.PointXYZ()
         polygon.source.C.point.set_coords(0, y, 0)
         if sides == 4:
-            polygon.source.D = fft.map.Vertex()
-            polygon.source.D.point = fft.map.PointXYZ()
+            polygon.source.D = fftmap.Vertex()
+            polygon.source.D.point = fftmap.PointXYZ()
             polygon.source.D.point.set_coords(28, y, 0)
         if texture:
-            polygon.source.A.normal = fft.map.VectorXYZ()
+            polygon.source.A.normal = fftmap.VectorXYZ()
             polygon.source.A.normal.set_coords(0, -1, 0)
-            polygon.source.B.normal = fft.map.VectorXYZ()
+            polygon.source.B.normal = fftmap.VectorXYZ()
             polygon.source.B.normal.set_coords(0, -1, 0)
-            polygon.source.C.normal = fft.map.VectorXYZ()
+            polygon.source.C.normal = fftmap.VectorXYZ()
             polygon.source.C.normal.set_coords(0, -1, 0)
-            polygon.source.A.texcoord = fft.map.PointUV()
+            polygon.source.A.texcoord = fftmap.PointUV()
             polygon.source.A.texcoord.set_coords(8, 8)
-            polygon.source.B.texcoord = fft.map.PointUV()
+            polygon.source.B.texcoord = fftmap.PointUV()
             polygon.source.B.texcoord.set_coords(28, 8)
-            polygon.source.C.texcoord = fft.map.PointUV()
+            polygon.source.C.texcoord = fftmap.PointUV()
             polygon.source.C.texcoord.set_coords(8, 28)
             if sides == 4:
-                polygon.source.D.normal = fft.map.VectorXYZ()
+                polygon.source.D.normal = fftmap.VectorXYZ()
                 polygon.source.D.normal.set_coords(0, -1, 0)
-                polygon.source.D.texcoord = fft.map.PointUV()
+                polygon.source.D.texcoord = fftmap.PointUV()
                 polygon.source.D.texcoord.set_coords(28, 28)
             polygon.source.texture_page = 0
             polygon.source.texture_palette = 0
@@ -1170,34 +1170,34 @@ class World(object):
 
     def copy_polygon_to_XOffset(self, copyingPolygon, xOffset, texture):
         polygon = Polygon(self)
-        sides = 3 if isinstance(copyingPolygon.source, fft.map.Triangle) else 4
-        polygon.source = fft.map.Triangle() if sides == 3 else fft.map.Quad()
+        sides = 3 if isinstance(copyingPolygon.source, fftmap.Triangle) else 4
+        polygon.source = fftmap.Triangle() if sides == 3 else fftmap.Quad()
         y = self.map.extents[0][1] - 12
 
-        polygon.source.A = fft.map.Vertex()
-        polygon.source.A.point = fft.map.PointXYZ()
+        polygon.source.A = fftmap.Vertex()
+        polygon.source.A.point = fftmap.PointXYZ()
         polygon.source.A.point.set_coords(
             copyingPolygon.source.A.point.X + xOffset,
             copyingPolygon.source.A.point.Y,
             copyingPolygon.source.A.point.Z,
         )
-        polygon.source.B = fft.map.Vertex()
-        polygon.source.B.point = fft.map.PointXYZ()
+        polygon.source.B = fftmap.Vertex()
+        polygon.source.B.point = fftmap.PointXYZ()
         polygon.source.B.point.set_coords(
             copyingPolygon.source.B.point.X + xOffset,
             copyingPolygon.source.B.point.Y,
             copyingPolygon.source.B.point.Z,
         )
-        polygon.source.C = fft.map.Vertex()
-        polygon.source.C.point = fft.map.PointXYZ()
+        polygon.source.C = fftmap.Vertex()
+        polygon.source.C.point = fftmap.PointXYZ()
         polygon.source.C.point.set_coords(
             copyingPolygon.source.C.point.X + xOffset,
             copyingPolygon.source.C.point.Y,
             copyingPolygon.source.C.point.Z,
         )
         if sides == 4:
-            polygon.source.D = fft.map.Vertex()
-            polygon.source.D.point = fft.map.PointXYZ()
+            polygon.source.D = fftmap.Vertex()
+            polygon.source.D.point = fftmap.PointXYZ()
             polygon.source.D.point.set_coords(
                 copyingPolygon.source.D.point.X + xOffset,
                 copyingPolygon.source.D.point.Y,
@@ -1205,47 +1205,47 @@ class World(object):
             )
         if texture:
             if not copyingPolygon.source.A.normal is None:
-                polygon.source.A.normal = fft.map.VectorXYZ()
+                polygon.source.A.normal = fftmap.VectorXYZ()
                 polygon.source.A.normal.set_coords(
                     copyingPolygon.source.A.normal.X,
                     copyingPolygon.source.A.normal.Y,
                     copyingPolygon.source.A.normal.Z,
                 )
-                polygon.source.B.normal = fft.map.VectorXYZ()
+                polygon.source.B.normal = fftmap.VectorXYZ()
                 polygon.source.B.normal.set_coords(
                     copyingPolygon.source.B.normal.X,
                     copyingPolygon.source.B.normal.Y,
                     copyingPolygon.source.B.normal.Z,
                 )
-                polygon.source.C.normal = fft.map.VectorXYZ()
+                polygon.source.C.normal = fftmap.VectorXYZ()
                 polygon.source.C.normal.set_coords(
                     copyingPolygon.source.C.normal.X,
                     copyingPolygon.source.C.normal.Y,
                     copyingPolygon.source.C.normal.Z,
                 )
-                polygon.source.A.texcoord = fft.map.PointUV()
+                polygon.source.A.texcoord = fftmap.PointUV()
                 polygon.source.A.texcoord.set_coords(
                     copyingPolygon.source.A.texcoord.U,
                     copyingPolygon.source.A.texcoord.V,
                 )
-                polygon.source.B.texcoord = fft.map.PointUV()
+                polygon.source.B.texcoord = fftmap.PointUV()
                 polygon.source.B.texcoord.set_coords(
                     copyingPolygon.source.B.texcoord.U,
                     copyingPolygon.source.B.texcoord.V,
                 )
-                polygon.source.C.texcoord = fft.map.PointUV()
+                polygon.source.C.texcoord = fftmap.PointUV()
                 polygon.source.C.texcoord.set_coords(
                     copyingPolygon.source.C.texcoord.U,
                     copyingPolygon.source.C.texcoord.V,
                 )
                 if sides == 4:
-                    polygon.source.D.normal = fft.map.VectorXYZ()
+                    polygon.source.D.normal = fftmap.VectorXYZ()
                     polygon.source.D.normal.set_coords(
                         copyingPolygon.source.D.normal.X,
                         copyingPolygon.source.D.normal.Y,
                         copyingPolygon.source.D.normal.Z,
                     )
-                    polygon.source.D.texcoord = fft.map.PointUV()
+                    polygon.source.D.texcoord = fftmap.PointUV()
                     polygon.source.D.texcoord.set_coords(
                         copyingPolygon.source.D.texcoord.U,
                         copyingPolygon.source.D.texcoord.V,

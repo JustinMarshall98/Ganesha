@@ -1,8 +1,8 @@
 from struct import pack, unpack
 
-from .gns import GNS
-from .resource import Resources
-from .texture import Texture as Texture_File
+from ganesha.gns import GNS
+from ganesha.resource import Resources
+from ganesha.texture import Texture as Texture_File
 
 
 class PointXYZ(object):
