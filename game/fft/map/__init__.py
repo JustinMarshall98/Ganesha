@@ -1,7 +1,7 @@
 from struct import pack, unpack
-from gns import GNS
-from texture import Texture as Texture_File
-from resource import Resources
+from .gns import GNS
+from .texture import Texture as Texture_File
+from .resource import Resources
 
 
 class PointXYZ(object):

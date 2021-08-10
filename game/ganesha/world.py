@@ -514,7 +514,7 @@ class Tile(object):
 		try:
 			(slope, rotation) = slope_types[self.slope_type]
 		except KeyError:
-			print 'Unknown slope type:', self.slope_type
+			print('Unknown slope type:', self.slope_type)
 			(slope, rotation) = (flat, 0)
 		if self.slope_height == 0:
 			(slope, rotation) = (flat, 0)

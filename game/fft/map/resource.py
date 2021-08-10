@@ -31,7 +31,7 @@ class Resource(object):
                     end = toc[j]
                     break
             self.chunks[i] = data[begin:end]
-            print i, self.file_path, begin, end
+            print(i, self.file_path, begin, end)
         self.toc = toc
 
     def write(self):
@@ -46,17 +46,17 @@ class Resource(object):
         data = pack('<49I', *toc)
         for chunk in self.chunks:
             data += chunk
-        print 'Writing', self.file_path
+        print('Writing', self.file_path)
         dateTime = datetime.now()
-        print dateTime
+        print(dateTime)
         old_size = self.size
         self.size = len(data)
         old_sectors = int(ceil(old_size / 2048.0))
         new_sectors = int(ceil(self.size / 2048.0))
         if new_sectors > old_sectors:
-            print 'WARNING: File has grown from %u sectors to %u sectors!' % (old_sectors, new_sectors)
+            print('WARNING: File has grown from %u sectors to %u sectors!' % (old_sectors, new_sectors))
         elif new_sectors < old_sectors:
-            print 'Note: File has shrunk from %u sectors to %u sectors.' % (old_sectors, new_sectors)
+            print('Note: File has shrunk from %u sectors to %u sectors.' % (old_sectors, new_sectors))
         self.file = open(self.file_path, 'wb')
         self.file.write(data)
         self.file.close()

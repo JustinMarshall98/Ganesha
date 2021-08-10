@@ -7,7 +7,7 @@ from direct.showbase.DirectObject import DirectObject
 from direct.fsm.FSM import FSM
 import wx
 import math
-from world import World, Polygon, Tile
+from .world import World, Polygon, Tile
 from ganesha import *
 
 POLYGON_INPUT_ID = 1000
@@ -2406,10 +2406,10 @@ class TerrainEditWindow(wx.Frame):
 		# Surface
 		label = wx.StaticText(panel, wx.ID_ANY, 'Surface')
 		sizer_main_table.Add(label)
-		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=surface_types.values())
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=list(surface_types.values()))
 		sizer_main_table.Add(data_input)
 		self.inputs[(0, 'surface_type')] = data_input
-		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 10, choices=surface_types.values())
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 10, choices=list(surface_types.values()))
 		sizer_main_table.Add(data_input)
 		self.inputs[(1, 'surface_type')] = data_input
 		# Impassable
@@ -2573,7 +2573,7 @@ class MultiTerrainEditWindow(wx.Frame):
 		# Surface
 		label = wx.StaticText(panel, wx.ID_ANY, 'Surface')
 		sizer_main_table.Add(label)
-		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=surface_types.values())
+		data_input = wx.Choice(panel, TERRAIN_INPUT_ID + 9, choices=list(surface_types.values()))
 		sizer_main_table.Add(data_input)
 		self.inputs[(0, 'surface_type')] = data_input
 		# Impassable
@@ -3571,7 +3571,7 @@ class Map_Viewer(DirectObject):
 				found = True
 				break
 		if not found:
-			print 'No polygon found for the selected tile.'
+			print('No polygon found for the selected tile.')
 
 	def find_tile(self):
 		polygon = self.selected_object
@@ -3580,7 +3580,7 @@ class Map_Viewer(DirectObject):
 		try:
 			tile = self.world.terrain.tiles[level][z][x]
 		except IndexError:
-			print 'No tile found for the selected polygon.'
+			print('No tile found for the selected polygon.')
 		if tile is not None:
 			self.terrain_mode = MOSTLY_TERRAIN
 			self.world.set_terrain_alpha(self.terrain_mode)

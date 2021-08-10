@@ -1496,7 +1496,7 @@ class GNS(object):
         try:
             self.file = open(self.file_path, 'rb')
         except IOError:
-            print 'Unable to open file', self.file_path
+            print('Unable to open file', self.file_path)
             sys.exit(1)
         map_dir = os.path.dirname(self.file_path)
         line_number = 0
@@ -1535,7 +1535,7 @@ class GNS(object):
                 ]
         found = []
         for key in search_items:
-            if self.items.has_key(key) and self.items[key] not in found:
+            if key in self.items and self.items[key] not in found:
                 found.append(self.items[key])
         return found
 
@@ -1551,6 +1551,6 @@ class GNS(object):
                 ]
         found = []
         for key in search_items:
-            if self.items.has_key(key) and self.items[key] not in found:
+            if key in self.items and self.items[key] not in found:
                 found.append(self.items[key])
         return found

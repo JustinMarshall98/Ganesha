@@ -22,7 +22,7 @@ except:
         if hasattr(map_viewer, 'showbase'):
             map_viewer.showbase.destroy()
     import traceback
-    print
-    print 'ERROR:'
+    print()
+    print('ERROR:')
     traceback.print_exc()
-    raw_input('Press Enter to continue.')
+    input('Press Enter to continue.')
