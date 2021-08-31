@@ -1484,7 +1484,7 @@ gnslines = {
 }
 
 
-class GNS(object):
+class GNS:
     def __init__(self):
         self.file_path = None
         self.file = None

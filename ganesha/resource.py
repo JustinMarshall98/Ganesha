@@ -4,7 +4,7 @@ from os.path import getsize
 from struct import pack, unpack
 
 
-class Resource(object):
+class Resource:
     def __init__(self):
         super(Resource, self).__init__()
         self.file_path = None
@@ -64,7 +64,7 @@ class Resource(object):
         self.file.close()
 
 
-class Resources(object):
+class Resources:
     def __init__(self):
         super(Resources, self).__init__()
         self.chunks = [None] * 49

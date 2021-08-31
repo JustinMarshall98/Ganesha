@@ -5,7 +5,7 @@ from ganesha.resource import Resources
 from ganesha.texture import Texture as Texture_File
 
 
-class PointXYZ(object):
+class PointXYZ:
     def __init__(self):
         self.X = None
         self.Y = None
@@ -19,7 +19,7 @@ class PointXYZ(object):
         self.coords = (self.X, self.Y, self.Z) = x, y, z
 
 
-class PointUV(object):
+class PointUV:
     def __init__(self):
         self.U = None
         self.V = None
@@ -32,7 +32,7 @@ class PointUV(object):
         self.coords = (self.U, self.V) = u, v
 
 
-class VectorXYZ(object):
+class VectorXYZ:
     def __init__(self):
         self.X = None
         self.Y = None
@@ -48,7 +48,7 @@ class VectorXYZ(object):
         self.coords = (self.X, self.Y, self.Z) = x, y, z
 
 
-class Vertex(object):
+class Vertex:
     def __init__(self):
         self.point = PointXYZ()
         self.normal = None
@@ -63,7 +63,7 @@ class Vertex(object):
             self.texcoord.from_data(texcoord_data)
 
 
-class Triangle(object):
+class Triangle:
     def __init__(self):
         self.A = Vertex()
         self.B = Vertex()
@@ -114,7 +114,7 @@ class Triangle(object):
             yield getattr(self, point)
 
 
-class Quad(object):
+class Quad:
     def __init__(self):
         self.A = Vertex()
         self.B = Vertex()
@@ -168,7 +168,7 @@ class Quad(object):
             yield getattr(self, point)
 
 
-class Palette(object):
+class Palette:
     def __init__(self):
         self.colors = None
 
@@ -184,7 +184,7 @@ class Palette(object):
         self.colors = colors
 
 
-class Ambient_Light(object):
+class Ambient_Light:
     def __init__(self):
         self.color = None
 
@@ -196,7 +196,7 @@ class Ambient_Light(object):
         return pack("3B", *color)
 
 
-class Directional_Light(object):
+class Directional_Light:
     def __init__(self):
         self.color = None
         self.direction = VectorXYZ()
@@ -206,7 +206,7 @@ class Directional_Light(object):
         self.direction.from_data(direction_data)
 
 
-class Background(object):
+class Background:
     def __init__(self):
         self.color1 = None
         self.color2 = None
@@ -219,7 +219,7 @@ class Background(object):
         return pack("6B", *(background.color1 + background.color2))
 
 
-class Tile(object):
+class Tile:
     def __init__(self):
         self.unknown1 = None
         self.surface_type = None
@@ -267,7 +267,7 @@ class Tile(object):
         return tile_data
 
 
-class Terrain(object):
+class Terrain:
     def __init__(self):
         self.tiles = []
 
@@ -304,7 +304,7 @@ class Terrain(object):
         return terrain_data
 
 
-class Texture(object):
+class Texture:
     def __init__(self):
         self.image = []
 
@@ -331,7 +331,7 @@ class Texture(object):
         return texture_data
 
 
-class Map(object):
+class Map:
     def __init__(self):
         self.gns = GNS()
         self.situation = None

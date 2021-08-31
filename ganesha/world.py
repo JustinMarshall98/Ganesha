@@ -80,7 +80,7 @@ slope_types = {
 }
 
 
-class Axes(object):
+class Axes:
     def __init__(self, parent):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -118,7 +118,7 @@ class Axes(object):
         self.node_path = self.parent.node_path_ui.attachNewNode(node)
 
 
-class Vertex(object):
+class Vertex:
     def __init__(self, parent, point, coords):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -175,7 +175,7 @@ class Vertex(object):
         self.node_path.setPos(*coords_to_panda(*self.coords))
 
 
-class Vector(object):
+class Vector:
     def __init__(self, parent, vector, coords):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -223,7 +223,7 @@ class Vector(object):
         self.node_path.setPos(*coords_to_panda(*self.coords))
 
 
-class Polygon(object):
+class Polygon:
     def __init__(self, parent):
         self.parent = parent
         self.source = None
@@ -364,7 +364,7 @@ class Polygon(object):
                 del self.nD
 
 
-class Palette(object):
+class Palette:
     def __init__(self, parent):
         self.parent = parent
         self.colors = None
@@ -373,7 +373,7 @@ class Palette(object):
         self.colors = data
 
 
-class Ambient_Light(object):
+class Ambient_Light:
     def __init__(self, parent):
         self.parent = parent
         self.node_path = None
@@ -398,7 +398,7 @@ class Ambient_Light(object):
         self.parent.node_path_mesh.setLight(self.node_path)
 
 
-class Directional_Light(object):
+class Directional_Light:
     def __init__(self, parent):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -464,7 +464,7 @@ class Directional_Light(object):
             self.node_path_line.setAlphaScale(0.0)
 
 
-class Background(object):
+class Background:
     def __init__(self, parent):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -507,7 +507,7 @@ class Background(object):
         self.node_path = base.camera.attachNewNode(node)
 
 
-class Tile(object):
+class Tile:
     def __init__(self, parent):
         self.parent = parent
         self.format = GeomVertexFormat.getV3c4()
@@ -627,7 +627,7 @@ class Tile(object):
         self.node_path.setColor(*self.tile_color + (1.0,))
 
 
-class Terrain(object):
+class Terrain:
     def __init__(self, parent):
         self.parent = parent
         self.node_path = None
@@ -663,7 +663,7 @@ class Terrain(object):
                     tile.init_node_path()
 
 
-class Texture(object):
+class Texture:
     def __init__(self):
         self.texture = None
         self.texture2 = None
@@ -826,7 +826,7 @@ class Texture(object):
         self.texture.load(tex_pnm)
 
 
-class World(object):
+class World:
     def __init__(self, parent):
         self.parent = parent
         self.map = fftmap.Map()

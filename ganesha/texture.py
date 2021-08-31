@@ -1,4 +1,4 @@
-class Texture(object):
+class Texture:
     def __init__(self):
         self.file_path = None
         self.data = None
