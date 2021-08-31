@@ -3,7 +3,7 @@
 import os
 import sys
 
-from ganesha.ui import Map_Viewer
+from ganesha.ui import MapViewer
 
 
 def main():
@@ -15,8 +15,8 @@ def main():
             print("File type must be GSN")
             sys.exit()
 
-    map_viewer = Map_Viewer()
-    map_viewer.start(map_path)
+    viewer = MapViewer()
+    viewer.start(map_path)
 
 
 if __name__ == "__main__":

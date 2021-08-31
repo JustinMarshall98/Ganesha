@@ -3520,7 +3520,7 @@ class LightsEditWindow(wx.Frame):
 
 
 # This defines what the mouse clicks do
-class Map_Viewer(DirectObject):
+class MapViewer(DirectObject):
     def __init__(self, *args, **kwargs):
         self.showbase = ShowBase()
         wp = WindowProperties()
