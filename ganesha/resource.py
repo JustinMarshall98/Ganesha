@@ -31,7 +31,6 @@ class Resource(object):
                     end = toc[j]
                     break
             self.chunks[i] = data[begin:end]
-            print(i, self.file_path, begin, end)
         self.toc = toc
 
     def write(self):
@@ -46,9 +45,6 @@ class Resource(object):
         data = pack("<49I", *toc)
         for chunk in self.chunks:
             data += chunk
-        print("Writing", self.file_path)
-        dateTime = datetime.now()
-        print(dateTime)
         old_size = self.size
         self.size = len(data)
         old_sectors = int(ceil(old_size / 2048.0))
